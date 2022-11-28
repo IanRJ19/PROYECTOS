@@ -36,10 +36,12 @@ def script():
 
         unido=pd.concat(df_reporte)
         unido=unido.drop_duplicates(subset=unido.columns)
-        unido.to_excel(ruta+"/"+"Reportes_UNIDOS.xlsx")
 
         #INICIAMOS EJECUCIÓN DE FORMATEADO
         tabla=unido
+        unido=unido.reset_index()
+        unido=unido.drop("index", axis=1)
+        unido.to_excel(ruta+"/"+"Reportes_UNIDOS.xlsx")
 
         #Ordenamos por Fecha y Eliminamos DNI duplicados
         tabla["Fecha"]=pd.to_datetime(tabla["Fecha"])
@@ -162,7 +164,7 @@ def script():
 
     except Exception:
         if "ruta" in globals():
-            notif.config(fg="red", text="Error en el proceso")
+            notif.config(fg="red", text="Error en el proceso")  
         else:
             notif.config(fg="red", text="No ha seleccionado una carpeta")
 
