@@ -6,7 +6,7 @@ customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 app = customtkinter.CTk()
-app.geometry("350x240")
+app.geometry("350x260")
 app.title("Inteligencia Comercial")
 ventana = customtkinter.CTkFrame(master=app)
 ventana.pack(pady=0, padx=0, fill="both", expand=True)
@@ -18,7 +18,7 @@ def seleccionar_carpeta():
     ruta = str(ruta)
     print(ruta)
     if ruta:
-        label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta Seleccionada",text_font=("Calibri",14,"bold"),text_color="#C00000")
+        label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta Seleccionada",text_font=("Calibri",14,"bold"),text_color="#007E06")
         label_1.pack(pady=12, padx=10)
     else:
         label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta No Seleccionada",text_font=("Calibri",14,"bold"),text_color="#C00000")
@@ -144,7 +144,7 @@ def script():
                     else:# EMP
                         print(a)
                         if ("Varios" in a):
-                            b=pd.read_csv(ruta+"/"+a,skiprows=0,dtype=str,on_bad_lines='skip')
+                            b=pd.read_table(ruta+"/"+a,skiprows=0,dtype=str,on_bad_lines='skip',encoding= 'unicode_escape')
 
                             #CAPTANDO NOMBRE OZ
                             nombre=b.iloc[3,0][9:40]
@@ -165,7 +165,7 @@ def script():
                             #ADICIONANDO
                             df_SCOT_C_EMP_VAR.append(b)
                         else:# Prov
-                            b=pd.read_csv(ruta+"/"+a,skiprows=0,dtype=str,on_bad_lines='skip')
+                            b=pd.read_table(ruta+"/"+a,skiprows=0,dtype=str,on_bad_lines='skip',encoding= 'unicode_escape')
 
                             #CAPTANDO NOMBRE OZ
                             nombre=b.iloc[3,0][9:40]
@@ -266,6 +266,7 @@ def script():
 
             SCOT_C_EMP_PROV = pd.DataFrame({'BENEFICIARIO' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[1:26],'DNI' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[27:38],'IMPORTE' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[48:58],'ESTADO' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[99:103],"OZ":SCOT_C_EMP_PROV["OZ"],"TIPO DE DOCUMENTO":"R","CÓDIGO OPERACIÓN":SCOT_C_EMP_PROV["CÓDIGO OPERACIÓN"],"FECHA PAGO":SCOT_C_EMP_PROV["FECHA PAGO"]})
 
+            SCOT_C_EMP_PROV['IMPORTE']= SCOT_C_EMP_PROV['IMPORTE'].str.replace(",", "")
             SCOT_C_EMP_PROV["BANCO"]="SCOTIABANK"
 
             #SCOT MACRO EMP PROV
@@ -289,7 +290,7 @@ def script():
 
             SCOT_C_EMP_VAR = pd.DataFrame({'BENEFICIARIO' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[1:26],'DNI' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[27:38],'IMPORTE' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[48:58],'ESTADO' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[99:103],"OZ":SCOT_C_EMP_VAR["OZ"],"TIPO DE DOCUMENTO":"L","CÓDIGO OPERACIÓN":SCOT_C_EMP_VAR["CÓDIGO OPERACIÓN"],"FECHA PAGO":SCOT_C_EMP_VAR["FECHA PAGO"]})
 
-
+            SCOT_C_EMP_VAR['IMPORTE']= SCOT_C_EMP_VAR['IMPORTE'].str.replace(",", "")
             SCOT_C_EMP_VAR["BANCO"]="SCOTIABANK"
 
             #SCOT MACRO EMP VAR
