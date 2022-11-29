@@ -6,23 +6,31 @@ customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 app = customtkinter.CTk()
-app.geometry("350x260")
+app.geometry("350x230")
 app.title("Inteligencia Comercial")
 ventana = customtkinter.CTkFrame(master=app)
 ventana.pack(pady=0, padx=0, fill="both", expand=True)
 
+label_2 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="INICIO",text_font=("Calibri",14,"bold"),text_color="#007E06")
+label_2.place(relx=0.5, rely=0.8, anchor=tkinter.CENTER)
 
 def seleccionar_carpeta():
     global ruta
     ruta = filedialog.askdirectory()
     ruta = str(ruta)
     print(ruta)
+
     if ruta:
-        label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta Seleccionada",text_font=("Calibri",14,"bold"),text_color="#007E06")
-        label_1.pack(pady=12, padx=10)
+        #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta Seleccionada",text_font=("Calibri",14,"bold"),text_color="#007E06")
+        #label_1.pack(pady=12, padx=10)
+        #label_1.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
+        label_2.configure(text="Carpeta Seleccionada",text_color="#007E06")
     else:
-        label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta No Seleccionada",text_font=("Calibri",14,"bold"),text_color="#C00000")
-        label_1.pack(pady=12, padx=10)
+        #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta No Seleccionada",text_font=("Calibri",14,"bold"),text_color="#C00000")
+        #label_1.pack(pady=12, padx=10)
+        #label_1.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
+        label_2.configure(text="Carpeta No Seleccionada",text_color="#C00000")
+
 
 def script():
     try:
@@ -352,15 +360,18 @@ def script():
         cruce_info = pd.merge(macros_unidos,constancias_unidas,how='inner',on='KEY')
         toda_info = pd.merge(macros_unidos,constancias_unidas,how='outer',on='KEY')
 
+        toda_info["¿MATCH?"] = np.where(toda_info["DNI_x"].astype(str).map(len)<toda_info["DNI_y"].astype(str).map(len) , "FALTA CONSTANCIA",np.where(toda_info["DNI_x"].astype(str).map(len)>toda_info["DNI_y"].astype(str).map(len) , "FALTA MACRO","SÍ"))
         #ARREGLANDO FORMATO
 
 
         macros_unidos=macros_unidos.drop(['index',"KEY"], axis=1)
         constancias_unidas=constancias_unidas.drop(['index',"KEY"], axis=1)
         cruce_info=cruce_info.drop(['index_x',"KEY",'index_y',"BENEFICIARIO_y","IMPORTE_y","DNI_y"], axis=1)
-        toda_info=toda_info.drop(['index_x',"KEY",'index_y',"BENEFICIARIO_y","IMPORTE_y","DNI_y"], axis=1)
+        #toda_info=toda_info.drop(['index_x',"KEY",'index_y',"BENEFICIARIO_y","IMPORTE_y","DNI_y"], axis=1)
+        toda_info=toda_info.drop(['index_x',"KEY",'index_y',"IMPORTE_y"], axis=1)
         cruce_info=cruce_info.rename(columns={"DNI_x":"DNI / RUC","BENEFICIARIO_x":"AGENTE","IMPORTE_x":"IMPORTE EN SOLES","OZ":"OPERADOR ZONAL","FECHA":"PERIODO DE FACTURACIÓN","TIPO DE DOCUMENTO":"COMPROBANTE","REF":"ID AGENTE"})
-        toda_info=toda_info.rename(columns={"DNI_x":"DNI / RUC","BENEFICIARIO_x":"AGENTE","IMPORTE_x":"IMPORTE EN SOLES","OZ":"OPERADOR ZONAL","FECHA":"PERIODO DE FACTURACIÓN","TIPO DE DOCUMENTO":"COMPROBANTE","REF":"ID AGENTE"})
+        #toda_info=toda_info.rename(columns={"DNI_x":"DNI / RUC","BENEFICIARIO_x":"AGENTE","IMPORTE_x":"IMPORTE EN SOLES","OZ":"OPERADOR ZONAL","FECHA":"PERIODO DE FACTURACIÓN","TIPO DE DOCUMENTO":"COMPROBANTE","REF":"ID AGENTE"})
+        toda_info=toda_info.rename(columns={"DNI_x":"DNI / RUC_MACRO","BENEFICIARIO_x":"AGENTE_MACRO","DNI_y":"DNI / RUC_CONST","BENEFICIARIO_y":"AGENTE_CONST","IMPORTE_x":"IMPORTE EN SOLES","OZ":"OPERADOR ZONAL","FECHA":"PERIODO DE FACTURACIÓN","TIPO DE DOCUMENTO":"COMPROBANTE","REF":"ID AGENTE"})
 
         #AÑADIENDO CAMBIOS A CONSTANCIA CONSOLIDADA
         constancias_unidas=constancias_unidas.rename(columns={"DNI":"DNI / RUC","BENEFICIARIO":"AGENTE","IMPORTE":"IMPORTE EN SOLES","TIPO DE DOCUMENTO":"COMPROBANTE","OZ":"OPERADOR ZONAL"})
@@ -372,7 +383,13 @@ def script():
 
         macros_unidos=macros_unidos.reindex(columns=["ID AGENTE", "AGENTE","DNI / RUC","IMPORTE EN SOLES","PERIODO DE FACTURACIÓN"])
         cruce_info=cruce_info.reindex(columns=["ID AGENTE", "AGENTE","DNI / RUC","OPERADOR ZONAL","FECHA PAGO","BANCO","IMPORTE EN SOLES","ESTADO","PERIODO DE FACTURACIÓN","COMPROBANTE","CÓDIGO OPERACIÓN"])
-        toda_info=toda_info.reindex(columns=["ID AGENTE", "AGENTE","DNI / RUC","OPERADOR ZONAL","FECHA PAGO","BANCO","IMPORTE EN SOLES","ESTADO","PERIODO DE FACTURACIÓN","COMPROBANTE","CÓDIGO OPERACIÓN"])
+        toda_info=toda_info.reindex(columns=["ID AGENTE", "AGENTE_CONST","DNI / RUC_CONST","AGENTE_MACRO","DNI / RUC_MACRO","OPERADOR ZONAL","FECHA PAGO","BANCO","IMPORTE EN SOLES","ESTADO","PERIODO DE FACTURACIÓN","COMPROBANTE","CÓDIGO OPERACIÓN","¿MATCH?"])
+        toda_info=toda_info.sort_values("¿MATCH?", ascending=False)
+        toda_info=toda_info.reset_index()
+        toda_info=toda_info.drop('index', axis=1)
+
+        #NUEVA PESTAÑA DE RESUMEN
+        #resumen=toda_info.describe()
 
         #DANDO COLORES Y ALINEACIÓN
         propiedades= {"border": "2px solid gray", "color": "black", "font-size": "14.5px","text-align":"center",'background-color': '#F2F2F2'}
@@ -388,29 +405,33 @@ def script():
         with pd.ExcelWriter(ruta+"/RESULTADOS/"+"Resultados.xlsx") as writer:
             cruce_info.to_excel(writer, sheet_name="Cruce")  
             toda_info.to_excel(writer, sheet_name="Todo")  
+            #resumen.to_excel(writer, sheet_name="Resumen")
 
 
         #Imprimimos tiempo
         tiempo=round((time.time() - start_time),2)
         texto="Proceso completado, tomó "+str(tiempo)+" segundos"
-        text_var = tkinter.StringVar(value=texto)
-        label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#007E06")
-        label_1.pack(pady=12, padx=10)
+        #text_var = tkinter.StringVar(value=texto)
+        #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#007E06")
+        #label_1.pack(pady=12, padx=10)
+        label_2.configure(text=texto)
+
     except Exception:
         if "ruta" in globals():
-            text_var = tkinter.StringVar(value="Error en el proceso")
-            label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#C00000")
-            label_1.pack(pady=12, padx=10)
+            #text_var = tkinter.StringVar(value="Error en el proceso")
+            #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#C00000")
+            #label_1.pack(pady=12, padx=10)
+            label_2.configure(text="Error en el proceso",text_color="#C00000")
         else:
-            text_var = tkinter.StringVar(value="No ha seleccionado una carpeta")
-            label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#C00000")
-            label_1.pack(pady=12, padx=10)
+            #text_var = tkinter.StringVar(value="No ha seleccionado una carpeta")
+            #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#C00000")
+            #label_1.pack(pady=12, padx=10)
+            label_2.configure(text="No ha seleccionado una carpeta",text_color="#C00000")
                         
 ###############
 # Etiquetas
 label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Consolidación de Pagos OZ",text_font=("Calibri",20,"bold"),text_color="black")#,bg_color="#002060",width=350,height=50)
 label_1.pack(pady=12, padx=10)
-
 
 # Botones
 button_1 = customtkinter.CTkButton(master=ventana, command=script,text="Ejecutar Script",text_font=("Calibri",10,"bold"),fg_color="#002060",text_color="white",border_color="black",border_width=2)

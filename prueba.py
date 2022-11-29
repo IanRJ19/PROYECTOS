@@ -327,27 +327,14 @@ macros_unidos['KEY'] = macros_unidos['DNI'] + macros_unidos['IMPORTE']
 cruce_info = pd.merge(macros_unidos,constancias_unidas,how='inner',on='KEY')
 toda_info = pd.merge(macros_unidos,constancias_unidas,how='outer',on='KEY')
 
+
+
+
+
+toda_info["¿MATCH?"] = np.where(toda_info["DNI_x"].astype(str).map(len)<toda_info["DNI_y"].astype(str).map(len) , "FALTA CONSTANCIA",np.where(toda_info["DNI_x"].astype(str).map(len)>toda_info["DNI_y"].astype(str).map(len) , "FALTA MACRO","HAY MATCH"))
 #ARREGLANDO FORMATO
 
 
-macros_unidos=macros_unidos.drop(['index',"KEY"], axis=1)
-constancias_unidas=constancias_unidas.drop(['index',"KEY"], axis=1)
-cruce_info=cruce_info.drop(['index_x',"KEY",'index_y',"BENEFICIARIO_y","IMPORTE_y","DNI_y"], axis=1)
-toda_info=toda_info.drop(['index_x',"KEY",'index_y',"BENEFICIARIO_y","IMPORTE_y","DNI_y"], axis=1)
-cruce_info=cruce_info.rename(columns={"DNI_x":"DNI / RUC","BENEFICIARIO_x":"AGENTE","IMPORTE_x":"IMPORTE EN SOLES","OZ":"OPERADOR ZONAL","FECHA":"PERIODO DE FACTURACIÓN","TIPO DE DOCUMENTO":"COMPROBANTE","REF":"ID AGENTE"})
-toda_info=toda_info.rename(columns={"DNI_x":"DNI / RUC","BENEFICIARIO_x":"AGENTE","IMPORTE_x":"IMPORTE EN SOLES","OZ":"OPERADOR ZONAL","FECHA":"PERIODO DE FACTURACIÓN","TIPO DE DOCUMENTO":"COMPROBANTE","REF":"ID AGENTE"})
-
-#AÑADIENDO CAMBIOS A CONSTANCIA CONSOLIDADA
-constancias_unidas=constancias_unidas.rename(columns={"DNI":"DNI / RUC","BENEFICIARIO":"AGENTE","IMPORTE":"IMPORTE EN SOLES","TIPO DE DOCUMENTO":"COMPROBANTE","OZ":"OPERADOR ZONAL"})
-macros_unidos=macros_unidos.rename(columns={"DNI":"DNI / RUC","BENEFICIARIO":"AGENTE","IMPORTE":"IMPORTE EN SOLES","REF":"ID AGENTE","FECHA":"PERIODO DE FACTURACIÓN"})
-
-
-#ORDENANDO POSICIÓN DE COLUMNAS
-constancias_unidas=constancias_unidas.reindex(columns=["AGENTE","DNI / RUC","FECHA PAGO","OPERADOR ZONAL","BANCO","IMPORTE EN SOLES","ESTADO","COMPROBANTE","CÓDIGO OPERACIÓN"])
-
-macros_unidos=macros_unidos.reindex(columns=["ID AGENTE", "AGENTE","DNI / RUC","IMPORTE EN SOLES","PERIODO DE FACTURACIÓN"])
-cruce_info=cruce_info.reindex(columns=["ID AGENTE", "AGENTE","DNI / RUC","OPERADOR ZONAL","FECHA PAGO","BANCO","IMPORTE EN SOLES","ESTADO","PERIODO DE FACTURACIÓN","COMPROBANTE","CÓDIGO OPERACIÓN"])
-toda_info=toda_info.reindex(columns=["ID AGENTE", "AGENTE","DNI / RUC","OPERADOR ZONAL","FECHA PAGO","BANCO","IMPORTE EN SOLES","ESTADO","PERIODO DE FACTURACIÓN","COMPROBANTE","CÓDIGO OPERACIÓN"])
 
 
 
