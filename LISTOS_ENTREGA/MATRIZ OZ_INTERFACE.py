@@ -1,6 +1,7 @@
 import tkinter
 import customtkinter
 from tkinter import filedialog
+import os 
 
 customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -25,11 +26,15 @@ def seleccionar_carpeta():
         #label_1.pack(pady=12, padx=10)
         #label_1.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
         label_2.configure(text="Carpeta Seleccionada",text_color="#007E06")
+        if not os.path.exists(ruta+"/"+"RESULTADOS"):
+            os.makedirs(ruta+"/"+"RESULTADOS")
     else:
         #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta No Seleccionada",text_font=("Calibri",14,"bold"),text_color="#C00000")
         #label_1.pack(pady=12, padx=10)
         #label_1.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
         label_2.configure(text="Carpeta No Seleccionada",text_color="#C00000")
+
+
 
 
 def script():
