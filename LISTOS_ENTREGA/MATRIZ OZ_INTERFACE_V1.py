@@ -1,19 +1,6 @@
-import tkinter
-import customtkinter
+from tkinter import *
 from tkinter import filedialog
 import os 
-
-customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
-
-app = customtkinter.CTk()
-app.geometry("350x230")
-app.title("Inteligencia Comercial")
-ventana = customtkinter.CTkFrame(master=app)
-ventana.pack(pady=0, padx=0, fill="both", expand=True)
-
-label_2 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="INICIO",text_font=("Calibri",14,"bold"),text_color="#007E06")
-label_2.place(relx=0.5, rely=0.8, anchor=tkinter.CENTER)
 
 def seleccionar_carpeta():
     global ruta
@@ -22,20 +9,11 @@ def seleccionar_carpeta():
     print(ruta)
 
     if ruta:
-        #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta Seleccionada",text_font=("Calibri",14,"bold"),text_color="#007E06")
-        #label_1.pack(pady=12, padx=10)
-        #label_1.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
-        label_2.configure(text="Carpeta Seleccionada",text_color="#007E06")
+        notif.config(fg="green", text="Carpeta Seleccionada")
         if not os.path.exists(ruta+"/"+"RESULTADOS"):
             os.makedirs(ruta+"/"+"RESULTADOS")
     else:
-        #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Carpeta No Seleccionada",text_font=("Calibri",14,"bold"),text_color="#C00000")
-        #label_1.pack(pady=12, padx=10)
-        #label_1.place(relx=0.5, rely=0.7, anchor=tkinter.CENTER)
-        label_2.configure(text="Carpeta No Seleccionada",text_color="#C00000")
-
-
-
+        notif.config(fg="red", text="Carpeta No Seleccionada")
 
 def script():
     try:
@@ -419,32 +397,45 @@ def script():
         #text_var = tkinter.StringVar(value=texto)
         #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#007E06")
         #label_1.pack(pady=12, padx=10)
-        label_2.configure(text=texto)
+        notif.config(fg="green", text=texto)
 
     except Exception:
         if "ruta" in globals():
-            #text_var = tkinter.StringVar(value="Error en el proceso")
-            #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#C00000")
-            #label_1.pack(pady=12, padx=10)
-            label_2.configure(text="Error en el proceso",text_color="#C00000")
+            notif.config(fg="red", text="Error en el proceso")
         else:
-            #text_var = tkinter.StringVar(value="No ha seleccionado una carpeta")
-            #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#C00000")
-            #label_1.pack(pady=12, padx=10)
-            label_2.configure(text="No ha seleccionado una carpeta",text_color="#C00000")
+            notif.config(fg="red", text="No ha seleccionado una carpeta")
                         
 ###############
+###############
+# Pantalla Principal
+master = Tk()
+master.title("Inteligencia Comercial")
+master.geometry("400x300")
+
 # Etiquetas
-label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,text="Consolidación de Pagos OZ",text_font=("Calibri",20,"bold"),text_color="black")#,bg_color="#002060",width=350,height=50)
-label_1.pack(pady=12, padx=10)
+Label(master, text="Consolidación de Pagos OZ", fg="#002060", font=("Calibri", 15)).grid(padx=10,row=0,column=2)
+Label(master, text="Introduce las fechas", fg="red", font=("Calibri", 15)).grid(padx=10,row=1,column=2)
+
+Label(master, text="En formato aaaa-mm-dd", fg="#000000", font=("Calibri", 10)).grid(padx=10,row=3,column=2)
+
+Label(master, text="Inicio Evento").grid(sticky=W, padx=1,row=5, column=1)
+Label(master, text="Fin Evento").grid( sticky=W,padx=1,row=6, column=1)
+
+Label(master, text="Inicio Captación").grid(sticky=W, padx=1,row=7, column=1)
+Label(master, text="Fin Captación").grid( sticky=W,pady=1,row=8, column=1)
+
+notif = Label(master, font=("Calibri", 12))
+notif.grid(sticky=N, pady=1, row=11, column=2)
+
 
 # Botones
-button_1 = customtkinter.CTkButton(master=ventana, command=script,text="Ejecutar Script",text_font=("Calibri",10,"bold"),fg_color="#002060",text_color="white",border_color="black",border_width=2)
-button_1.pack(pady=12, padx=10)
 
-button_1 = customtkinter.CTkButton(master=ventana, command=seleccionar_carpeta,text="Seleccionar Carpeta",text_font=("Calibri",10,"bold"),fg_color="#002060",text_color="white",border_color="black",border_width=2)
-button_1.pack(pady=12, padx=10)
+Button(master, width=20, text="Ejecutar Script", font=("Calibri", 12), command=script).grid(row=9, column=2,pady=10)
+Button(master, width=20, text="Seleccionar carpeta", font=("Calibri", 12), command=seleccionar_carpeta).grid(row=10, column=2)
 
-app.mainloop()
+master.mainloop()
+
+
+
 
 
