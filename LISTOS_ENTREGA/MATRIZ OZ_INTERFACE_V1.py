@@ -410,28 +410,22 @@ def script():
 # Pantalla Principal
 master = Tk()
 master.title("Inteligencia Comercial")
-master.geometry("400x300")
+master.geometry("370x250")
 
 # Etiquetas
-Label(master, text="Consolidación de Pagos OZ", fg="#002060", font=("Calibri", 15)).grid(padx=10,row=0,column=2)
-Label(master, text="Introduce las fechas", fg="red", font=("Calibri", 15)).grid(padx=10,row=1,column=2)
+Label(master, text="Consolidación de Pagos OZ", fg="black", font=("Calibri", 15,"bold")).grid(padx=70,row=0,column=2,pady=20)
 
-Label(master, text="En formato aaaa-mm-dd", fg="#000000", font=("Calibri", 10)).grid(padx=10,row=3,column=2)
 
-Label(master, text="Inicio Evento").grid(sticky=W, padx=1,row=5, column=1)
-Label(master, text="Fin Evento").grid( sticky=W,padx=1,row=6, column=1)
 
-Label(master, text="Inicio Captación").grid(sticky=W, padx=1,row=7, column=1)
-Label(master, text="Fin Captación").grid( sticky=W,pady=1,row=8, column=1)
 
-notif = Label(master, font=("Calibri", 12))
-notif.grid(sticky=N, pady=1, row=11, column=2)
-
+notif = Label(master, font=("Calibri", 12,"bold"))
+notif.grid(sticky=N, pady=20, row=11, column=2)
+notif.config(fg="green", text="Inicio")
 
 # Botones
 
-Button(master, width=20, text="Ejecutar Script", font=("Calibri", 12), command=script).grid(row=9, column=2,pady=10)
-Button(master, width=20, text="Seleccionar carpeta", font=("Calibri", 12), command=seleccionar_carpeta).grid(row=10, column=2)
+Button(master, width=20,fg="white", text="Ejecutar Script",bg="#002060", font=("Calibri", 12,"bold"), command=script).grid(row=9, column=2,pady=10)
+Button(master, width=20,fg="white", text="Seleccionar carpeta",bg="#002060", font=("Calibri", 12,"bold"), command=seleccionar_carpeta).grid(row=10, column=2,pady=0)
 
 master.mainloop()
 
