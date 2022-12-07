@@ -178,7 +178,7 @@ def script():
         ############################################################################################
         #BBVA CONSTANCIA 
         if df_BBVA_C:
-            BBVA_C=BBVA_C=pd.concat(df_BBVA_C)
+            BBVA_C=pd.concat(df_BBVA_C)
             BBVA_C=BBVA_C.rename(columns={'Doc.Identidad': 'DNI',"Importe":"IMPORTE","Situación":"ESTADO","Titular(Archivo)":"BENEFICIARIO"})
             BBVA_C["MONEDA"]="S/"
             BBVA_C["TIPO DE DOCUMENTO"]=BBVA_C["DNI"].str.slice(start=0, stop=2)
