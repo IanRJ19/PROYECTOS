@@ -25,11 +25,11 @@ df1_POS_DISP=df1[["MODELO","Disponible"]]
 df1 = df1[18:]
 df1_TOTAL_SG=df1
 df1_POS_INICIAL=df1["All"]
-df1_ASIGNADOS=Base[Base["Tipo"].isin(["RUC(Empresa)", "RUC(Entidad Financiera)"])]
-df1_ASIGNADOS_DNI=Base[Base["Tipo"]=="DNI"]
-df1_INSTALADOS_1=Base[(Base["Estado terminal"]=="Instalado") & (Base["ESTADO SG"].isin(["Despachado","Asignado"]))]
-df1_ESTADOTERM=Base.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="Estado terminal",fill_value=0, margins=True)
-df1_ESTADOTERM_2=Base[Base["MODELO"].isin(["ICT 220", "ICT 250","APOS"])]
+DF_ASIGNADOS_CLIENTES=Base[Base["Tipo"].isin(["RUC(Empresa)", "RUC(Entidad Financiera)"])]
+DF_ASIGNADOS_PERSONAL=Base[Base["Tipo"]=="DNI"]
+DF_INSTALADOS_1=Base[(Base["Estado terminal"]=="Instalado") & (Base["ESTADO SG"].isin(["Despachado","Asignado"]))]
+DF_ESTADO_BYS=Base.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="Estado terminal",fill_value=0, margins=True)
+DF_ESTADO_DEBAJA=Base[Base["MODELO"].isin(["ICT 220", "ICT 250","APOS"])]
 
 
 #POS FINAL DISPONIBLES
@@ -56,86 +56,84 @@ df1_TOTAL_SG=df1_TOTAL_SG.replace('Bloqueado', "Irreparables")
 df1_TOTAL_SG=df1_TOTAL_SG.replace('De baja', "De baja (Venta/Robo)")
 
 #POS Asignado a Empresas
-df1_ASIGNADOS=df1_ASIGNADOS.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",fill_value=0, margins=True)
-df1_ASIGNADOS=df1_ASIGNADOS.reset_index()
-df1_ASIGNADOS=df1_ASIGNADOS[9:]
-df1_ASIGNADOS=df1_ASIGNADOS.drop(['OC', 'MODELO'],axis=1 )
-df1_ASIGNADOS=df1_ASIGNADOS.transpose()
-df1_ASIGNADOS=df1_ASIGNADOS.reset_index()
-df1_ASIGNADOS.columns=["DESCRIPCIÓN","CANTIDAD"]
-df1_ASIGNADOS=df1_ASIGNADOS.replace('NUMERO SERIE', "Asignados a Clientes")
+DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",fill_value=0, margins=True)
+DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.reset_index()
+DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES[9:]
+DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.drop(['OC', 'MODELO'],axis=1 )
+DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.transpose()
+DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.reset_index()
+DF_ASIGNADOS_CLIENTES.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.replace('NUMERO SERIE', "Asignados a Clientes")
 
 
 #POS Asignado a Personal Activo y Cesado
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="tipo DNI",fill_value=0, margins=True)
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI.reset_index()
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI[13:]
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI.transpose()
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI.reset_index()
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI[3:5]
-df1_ASIGNADOS_DNI.columns=["DESCRIPCIÓN","CANTIDAD"]
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI.replace('Activo', "Asignados al Personal")
-df1_ASIGNADOS_DNI=df1_ASIGNADOS_DNI.replace('Cesado', "Asignados al Personal Cesado")
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="tipo DNI",fill_value=0, margins=True)
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.reset_index()
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL[13:]
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.transpose()
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.reset_index()
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL[3:5]
+DF_ASIGNADOS_PERSONAL.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.replace('Activo', "Asignados al Personal")
+DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.replace('Cesado', "Asignados al Personal Cesado")
 
 
 
 #Instalados AKN (1) y (+2)
-df1_INSTALADOS_1=df1_INSTALADOS_1.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="x",fill_value=0, margins=True)
-df1_INSTALADOS_2=df1_INSTALADOS_1
-df1_INSTALADOS_1=df1_INSTALADOS_1.reset_index()
-df1_INSTALADOS_1=df1_INSTALADOS_1.replace('ICT 220', "Instalados AKN (1) ICT")
-df1_INSTALADOS_1=df1_INSTALADOS_1.replace('ICT 250', "Instalados AKN (1) ICT")
-df1_INSTALADOS_1=df1_INSTALADOS_1.replace('APOS', "Instalados AKN (1) APOS")
-df1_INSTALADOS_1=df1_INSTALADOS_1.groupby("MODELO").sum()
-df1_INSTALADOS_1=df1_INSTALADOS_1.reset_index()
-df1_INSTALADOS_1=df1_INSTALADOS_1.drop(0, axis=0)
-df1_INSTALADOS_1=df1_INSTALADOS_1.drop([2,3,"All"], axis=1)
-df1_INSTALADOS_1.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_INSTALADOS_1=DF_INSTALADOS_1.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="x",fill_value=0, margins=True)
+DF_INSTALADOS_2=DF_INSTALADOS_1
+DF_INSTALADOS_1=DF_INSTALADOS_1.reset_index()
+DF_INSTALADOS_1=DF_INSTALADOS_1.replace('ICT 220', "Instalados AKN (1) ICT")
+DF_INSTALADOS_1=DF_INSTALADOS_1.replace('ICT 250', "Instalados AKN (1) ICT")
+DF_INSTALADOS_1=DF_INSTALADOS_1.replace('APOS', "Instalados AKN (1) APOS")
+DF_INSTALADOS_1=DF_INSTALADOS_1.groupby("MODELO").sum()
+DF_INSTALADOS_1=DF_INSTALADOS_1.reset_index()
+DF_INSTALADOS_1=DF_INSTALADOS_1.drop(0, axis=0)
+DF_INSTALADOS_1=DF_INSTALADOS_1.drop([2,3,"All"], axis=1)
+DF_INSTALADOS_1.columns=["DESCRIPCIÓN","CANTIDAD"]
 
 
-df1_INSTALADOS_2["SUMA"]=df1_INSTALADOS_2[2]+df1_INSTALADOS_2[3]
-df1_INSTALADOS_2=df1_INSTALADOS_2.reset_index()
-df1_INSTALADOS_2=df1_INSTALADOS_2.drop(["All",1,2,3], axis=1)
-df1_INSTALADOS_2=df1_INSTALADOS_2.replace('ICT 250', "Instalados AKN (+1)")
-df1_INSTALADOS_2=df1_INSTALADOS_2.replace('ICT 220', "Instalados AKN (+1)")
-df1_INSTALADOS_2=df1_INSTALADOS_2.replace('APOS', "Instalados AKN (+1)")
-df1_INSTALADOS_2=df1_INSTALADOS_2.groupby("MODELO").sum()
-df1_INSTALADOS_2=df1_INSTALADOS_2.reset_index()
-df1_INSTALADOS_2=df1_INSTALADOS_2.drop(0, axis=0)
-df1_INSTALADOS_2.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_INSTALADOS_2["SUMA"]=DF_INSTALADOS_2[2]+DF_INSTALADOS_2[3]
+DF_INSTALADOS_2=DF_INSTALADOS_2.reset_index()
+DF_INSTALADOS_2=DF_INSTALADOS_2.drop(["All",1,2,3], axis=1)
+DF_INSTALADOS_2=DF_INSTALADOS_2.replace('ICT 250', "Instalados AKN (+1)")
+DF_INSTALADOS_2=DF_INSTALADOS_2.replace('ICT 220', "Instalados AKN (+1)")
+DF_INSTALADOS_2=DF_INSTALADOS_2.replace('APOS', "Instalados AKN (+1)")
+DF_INSTALADOS_2=DF_INSTALADOS_2.groupby("MODELO").sum()
+DF_INSTALADOS_2=DF_INSTALADOS_2.reset_index()
+DF_INSTALADOS_2=DF_INSTALADOS_2.drop(0, axis=0)
+DF_INSTALADOS_2.columns=["DESCRIPCIÓN","CANTIDAD"]
 
 
-#ESTADO INSTALADOS AKN Y SUSPENDIDOS
-df1_ESTADOTERM=df1_ESTADOTERM.reset_index()
-df1_ESTADOTERM=df1_ESTADOTERM.set_index("OC")
-df1_ESTADOTERM_PRE=df1_ESTADOTERM.loc["All":]
-df1_ESTADOTERM_PRE=df1_ESTADOTERM_PRE.reset_index()
-df1_ESTADOTERM_PRE=df1_ESTADOTERM_PRE.drop(['OC', 'MODELO', '', '-', 'Baja', 'Instalado', 'All'], axis=1)
-df1_ESTADOTERM_PRE=df1_ESTADOTERM_PRE.transpose()
-df1_ESTADOTERM_PRE=df1_ESTADOTERM_PRE.reset_index()
-df1_ESTADOTERM_PRE=df1_ESTADOTERM_PRE.replace('Pre Agente', "Instalados AKN preagente")
-df1_ESTADOTERM_PRE=df1_ESTADOTERM_PRE.replace('Suspendido', "AKN suspendidos")
-df1_ESTADOTERM_PRE.columns=["DESCRIPCIÓN","CANTIDAD"]
-print(df1_ESTADOTERM_PRE)
+#POS PRE AGENTE Y SUSPENDIDOS
+DF_ESTADO_BYS=DF_ESTADO_BYS.reset_index()
+DF_ESTADO_BYS=DF_ESTADO_BYS.set_index("OC")
+DF_ESTADO_BYS=DF_ESTADO_BYS.loc["All":]
+DF_ESTADO_BYS=DF_ESTADO_BYS.reset_index()
+DF_ESTADO_BYS=DF_ESTADO_BYS.drop(['OC', 'MODELO', '', '-', 'Baja', 'Instalado', 'All'], axis=1)
+DF_ESTADO_BYS=DF_ESTADO_BYS.transpose()
+DF_ESTADO_BYS=DF_ESTADO_BYS.reset_index()
+DF_ESTADO_BYS=DF_ESTADO_BYS.replace('Pre Agente', "Instalados AKN preagente")
+DF_ESTADO_BYS=DF_ESTADO_BYS.replace('Suspendido', "AKN suspendidos")
+DF_ESTADO_BYS.columns=["DESCRIPCIÓN","CANTIDAD"]
+print(DF_ESTADO_BYS)
 
-#POR RECUPERAR AKN
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="Estado terminal",fill_value=0, margins=True)
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.reset_index()
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.replace("ICT 220", "Por recuperar AKN de baja ICT")
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.replace('ICT 250', "Por recuperar AKN de baja ICT")
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.replace('APOS', "Por recuperar AKN de baja APOS")
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.groupby("MODELO").sum()
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.reset_index()
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.drop(['Pre Agente', 'Suspendido', '', '-', 'Instalado', 'All'], axis=1)
-df1_ESTADOTERM_2.columns=["DESCRIPCIÓN","CANTIDAD"]
-df1_ESTADOTERM_2=df1_ESTADOTERM_2.drop(0, axis=0)
+#POS DE BAJA AKN
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="Estado terminal",fill_value=0, margins=True)
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.reset_index()
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.replace("ICT 220", "Por recuperar AKN de baja ICT")
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.replace('ICT 250', "Por recuperar AKN de baja ICT")
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.replace('APOS', "Por recuperar AKN de baja APOS")
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.groupby("MODELO").sum()
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.reset_index()
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(['Pre Agente', 'Suspendido', '', '-', 'Instalado', 'All'], axis=1)
+DF_ESTADO_DEBAJA.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(0, axis=0)
 
 
 #UNIENDO ALL Y SUBIENDO
-total=pd.concat([df1_POS_INICIAL,df1_INSTALADOS_1,df1_INSTALADOS_2,df1_ASIGNADOS,df1_ASIGNADOS_DNI,df1_ESTADOTERM_PRE,df1_ESTADOTERM_2,df1_TOTAL_SG,df1_POS_DISP])
+total=pd.concat([df1_POS_INICIAL,DF_INSTALADOS_1,DF_INSTALADOS_2,DF_ASIGNADOS_CLIENTES,DF_ASIGNADOS_PERSONAL,DF_ESTADO_BYS,DF_ESTADO_DEBAJA,df1_TOTAL_SG,df1_POS_DISP])
 total=total.reset_index()
 total=total.drop("index", axis=1)
 print(total)
-#total=total.reindex([1,2,3,4])
-
 wsheet.update([total.columns.values.tolist()]+total.values.tolist())
