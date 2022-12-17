@@ -20,9 +20,9 @@ df1=Base.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], columns="ESTA
 df1=df1.reset_index()
 
 #ASIGNANDO DATA
-df1_POS_DISP=df1[["MODELO","Disponible"]]
-df1_TOTAL_SG=df1
-df1_POS_INICIAL=df1
+DF_POS_DISPONIBLE=df1[["MODELO","Disponible"]]
+DF_TOTAL_SG=df1
+DF_POS_INICIAL=df1
 DF_ASIGNADOS_CLIENTES=Base[Base["Tipo"].isin(["RUC(Empresa)", "RUC(Entidad Financiera)"])]
 DF_ASIGNADOS_PERSONAL=Base[Base["Tipo"]=="DNI"]
 DF_INSTALADOS_1=Base[(Base["Estado terminal"]=="Instalado") & (Base["ESTADO SG"].isin(["Despachado","Asignado"]))]
@@ -31,33 +31,33 @@ DF_ESTADO_DEBAJA=Base[Base["MODELO"].isin(["ICT 220", "ICT 250","APOS"])]
 
 
 #POS FINAL DISPONIBLES
-df1_POS_DISP=df1_POS_DISP.replace(['ICT 220','ICT 250'], "POS final (disponible) ICT")
-df1_POS_DISP=df1_POS_DISP.replace(['APOS'], "POS final (disponible) APOS")
-df1_POS_DISP=df1_POS_DISP.replace(['DX8000'], "POS final (disponible) DX8000")
-df1_POS_DISP=df1_POS_DISP.groupby(["MODELO"])["Disponible"].sum()
-df1_POS_DISP=df1_POS_DISP.reset_index()
-df1_POS_DISP=df1_POS_DISP.drop(df1_POS_DISP.index[0])
-df1_POS_DISP.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_POS_DISPONIBLE=DF_POS_DISPONIBLE.replace(['ICT 220','ICT 250'], "POS final (disponible) ICT")
+DF_POS_DISPONIBLE=DF_POS_DISPONIBLE.replace(['APOS'], "POS final (disponible) APOS")
+DF_POS_DISPONIBLE=DF_POS_DISPONIBLE.replace(['DX8000'], "POS final (disponible) DX8000")
+DF_POS_DISPONIBLE=DF_POS_DISPONIBLE.groupby(["MODELO"])["Disponible"].sum()
+DF_POS_DISPONIBLE=DF_POS_DISPONIBLE.reset_index()
+DF_POS_DISPONIBLE=DF_POS_DISPONIBLE.drop(DF_POS_DISPONIBLE.index[0])
+DF_POS_DISPONIBLE.columns=["DESCRIPCIÓN","CANTIDAD"]
 
 #POS INICIAL
-df1_POS_INICIAL=df1
-df1_POS_INICIAL=df1_POS_INICIAL.set_index("OC")
-df1_POS_INICIAL=df1_POS_INICIAL.loc["All":]
-df1_POS_INICIAL=df1_POS_INICIAL.drop(["MODELO","Despachado","Disponible","Asignado",'Bloqueado', 'De baja', 'En mantenimiento', 'Malogrado', 'Por Ubicar'], axis=1)
-df1_POS_INICIAL=df1_POS_INICIAL.reset_index()
-df1_POS_INICIAL.columns=["DESCRIPCIÓN","CANTIDAD"]
-df1_POS_INICIAL=df1_POS_INICIAL.replace("All", "POS INICIAL")
+DF_POS_INICIAL=df1
+DF_POS_INICIAL=DF_POS_INICIAL.set_index("OC")
+DF_POS_INICIAL=DF_POS_INICIAL.loc["All":]
+DF_POS_INICIAL=DF_POS_INICIAL.drop(["MODELO","Despachado","Disponible","Asignado",'Bloqueado', 'De baja', 'En mantenimiento', 'Malogrado', 'Por Ubicar'], axis=1)
+DF_POS_INICIAL=DF_POS_INICIAL.reset_index()
+DF_POS_INICIAL.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_POS_INICIAL=DF_POS_INICIAL.replace("All", "POS INICIAL")
 
 #TOTALES POR ESTADO SG
-df1_TOTAL_SG=df1_TOTAL_SG.set_index("OC")
-df1_TOTAL_SG=df1_TOTAL_SG.loc["All":]
-df1_TOTAL_SG=df1_TOTAL_SG.reset_index()
-df1_TOTAL_SG=df1_TOTAL_SG.drop(["All","OC","MODELO","Despachado","Disponible","Asignado"], axis=1)
-df1_TOTAL_SG=df1_TOTAL_SG.transpose()
-df1_TOTAL_SG=df1_TOTAL_SG.reset_index()
-df1_TOTAL_SG.columns=["DESCRIPCIÓN","CANTIDAD"]
-df1_TOTAL_SG=df1_TOTAL_SG.replace('Bloqueado', "Irreparables")
-df1_TOTAL_SG=df1_TOTAL_SG.replace('De baja', "De baja (Venta/Robo)")
+DF_TOTAL_SG=DF_TOTAL_SG.set_index("OC")
+DF_TOTAL_SG=DF_TOTAL_SG.loc["All":]
+DF_TOTAL_SG=DF_TOTAL_SG.reset_index()
+DF_TOTAL_SG=DF_TOTAL_SG.drop(["All","OC","MODELO","Despachado","Disponible","Asignado"], axis=1)
+DF_TOTAL_SG=DF_TOTAL_SG.transpose()
+DF_TOTAL_SG=DF_TOTAL_SG.reset_index()
+DF_TOTAL_SG.columns=["DESCRIPCIÓN","CANTIDAD"]
+DF_TOTAL_SG=DF_TOTAL_SG.replace('Bloqueado', "Irreparables")
+DF_TOTAL_SG=DF_TOTAL_SG.replace('De baja', "De baja (Venta/Robo)")
 
 #POS Asignado a Empresas
 DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",fill_value=0, margins=True)
@@ -133,7 +133,7 @@ DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(0, axis=0)
 
 
 #UNIENDO ALL Y SUBIENDO
-total=pd.concat([df1_POS_INICIAL,DF_INSTALADOS_1,DF_INSTALADOS_2,DF_ASIGNADOS_CLIENTES,DF_ASIGNADOS_PERSONAL,DF_ESTADO_BYS,DF_ESTADO_DEBAJA,df1_TOTAL_SG,df1_POS_DISP])
+total=pd.concat([DF_POS_INICIAL,DF_INSTALADOS_1,DF_INSTALADOS_2,DF_ASIGNADOS_CLIENTES,DF_ASIGNADOS_PERSONAL,DF_ESTADO_BYS,DF_ESTADO_DEBAJA,DF_TOTAL_SG,DF_POS_DISPONIBLE])
 total=total.reset_index()
 total=total.drop("index", axis=1)
 print(total)
