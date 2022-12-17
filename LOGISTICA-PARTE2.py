@@ -133,8 +133,8 @@ DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(0, axis=0)
 
 
 #UNIENDO ALL Y SUBIENDO
-total=pd.concat([DF_POS_INICIAL,DF_INSTALADOS_1,DF_INSTALADOS_2,DF_ASIGNADOS_CLIENTES,DF_ASIGNADOS_PERSONAL,DF_ESTADO_BYS,DF_ESTADO_DEBAJA,DF_TOTAL_SG,DF_POS_DISPONIBLE])
-total=total.reset_index()
-total=total.drop("index", axis=1)
-print(total)
-wsheet.update([total.columns.values.tolist()]+total.values.tolist())
+UNIDO=pd.concat([DF_POS_INICIAL,DF_INSTALADOS_1,DF_INSTALADOS_2,DF_ASIGNADOS_CLIENTES,DF_ASIGNADOS_PERSONAL,DF_ESTADO_BYS,DF_ESTADO_DEBAJA,DF_TOTAL_SG,DF_POS_DISPONIBLE])
+UNIDO=UNIDO.reset_index()
+UNIDO=UNIDO.drop("index", axis=1)
+print(UNIDO)
+wsheet.update([UNIDO.columns.values.tolist()]+UNIDO.values.tolist())
