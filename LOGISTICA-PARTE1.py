@@ -21,14 +21,27 @@ def actualizado():
         from xlsx2csv import Xlsx2csv
         from io import StringIO
         import pandas as pd
-        path=r"H:\Mi unidad\TRABAJO\PROCESOS_AUTOMATICOS\Script_Logistica\ReporteArticulos 2022.12.13.xlsx"
+        import time
+        start_time = time.time()
+        #Lectura de archivos
+        archivos=os.listdir(ruta)
+
         def read_excel(path: str, sheet_name: str) -> pd.DataFrame:
             buffer = StringIO()
             Xlsx2csv(path, outputencoding="utf-8", sheet_name=sheet_name).convert(buffer)
             buffer.seek(0)
             agentes = pd.read_csv(buffer)
             return agentes
-        articulos=read_excel(path,"Hoja 1")
+
+        for i in range(len(archivos)):
+            a=archivos[i]
+            if ("ReporteArticulos" in a):
+                path=ruta+"/"+a
+                articulos=read_excel(path,"Hoja 1")
+            elif ("ReporteTerminales" in a):
+                path=r"H:\Mi unidad\TRABAJO\PROCESOS_AUTOMATICOS\Script_Logistica\ReporteTerminales 2022.12.13.xlsx"
+                terminales=read_excel(path,"Hoja 1")
+
         cabeza = articulos.iloc[0]
         articulos = articulos[1:]
         articulos.columns = cabeza
@@ -44,23 +57,13 @@ def actualizado():
         import gspread
         from oauth2client.service_account import ServiceAccountCredentials
         gc = gspread.service_account(filename="H:\Mi unidad\LLAVES\ActivarGoogleSheetIan.json")
-        gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/16vUo6Q5csaAIMli4TbsKZxgSvfioc1nlRFm_3fZ-Cis")
+        gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1JYaYF64CIkWeyS3rpxmTN15WNae5yS0oPHIaXLUi21M")
         wsheet = gsheet.worksheet("articulos 28.11")
         wsheet.update([articulos.columns.values.tolist()]+articulos.values.tolist())
 
 
         #TRABAJO EXCEL TERMINALES
-        from xlsx2csv import Xlsx2csv
-        from io import StringIO
-        import pandas as pd
-        path=r"H:\Mi unidad\TRABAJO\PROCESOS_AUTOMATICOS\Script_Logistica\ReporteTerminales 2022.12.13.xlsx"
-        def read_excel(path: str, sheet_name: str) -> pd.DataFrame:
-            buffer = StringIO()
-            Xlsx2csv(path, outputencoding="utf-8", sheet_name=sheet_name).convert(buffer)
-            buffer.seek(0)
-            agentes = pd.read_csv(buffer)
-            return agentes
-        terminales=read_excel(path,"Hoja 1")
+
         cabeza = terminales.iloc[0]
         terminales = terminales[1:]
         terminales.columns = cabeza
@@ -77,12 +80,6 @@ def actualizado():
         terminales = terminales.drop_duplicates(subset="NÚMERO SERIE")
 
         #INSERTANDO DATOS EN GS ENVIADOS
-
-        import pandas as pd 
-        import gspread
-        from oauth2client.service_account import ServiceAccountCredentials
-        gc = gspread.service_account(filename="H:\Mi unidad\LLAVES\ActivarGoogleSheetIan.json")
-        gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/16vUo6Q5csaAIMli4TbsKZxgSvfioc1nlRFm_3fZ-Cis")
         wsheet = gsheet.worksheet("Enviado 28.11")
         wsheet.update([terminales.columns.values.tolist()]+terminales.values.tolist())
 
@@ -97,11 +94,6 @@ def actualizado():
         terminales2 = terminales2.drop_duplicates(subset='TERMINAL/DNI/RUC')
 
         #INSERTANDO DATOS EN GS TERMINALES
-        import pandas as pd 
-        import gspread
-        from oauth2client.service_account import ServiceAccountCredentials
-        gc = gspread.service_account(filename="H:\Mi unidad\LLAVES\ActivarGoogleSheetIan.json")
-        gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1JYaYF64CIkWeyS3rpxmTN15WNae5yS0oPHIaXLUi21M")
         wsheet = gsheet.worksheet("Terminales 02.12")
         wsheet.update([terminales2.columns.values.tolist()]+terminales2.values.tolist())
 
@@ -116,10 +108,10 @@ def actualizado():
 # Pantalla Principal
 master = Tk()
 master.title("Inteligencia Comercial")
-master.geometry("370x300")
+master.geometry("300x300")
 
 # Etiquetas
-Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 15,"bold")).grid(padx=70,row=0,column=1,pady=20)
+Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 15,"bold")).grid(padx=0,row=0,column=1,pady=20)
 
 
 notif = Label(master, font=("Calibri", 14,"bold"))
@@ -128,14 +120,12 @@ notif.config(fg="green", text="Inicio")
 
 # Botones
 
-Button(master, width=20,fg="white", text="Actualizado de Pestañas",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=9, column=1,pady=10)
+Button(master, width=20,fg="white", text="Actualizado de Pestañas",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=9, column=1,pady=10,padx=0)
 
 
+Button(master, width=20,fg="white", text="Crear Resumen",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=10, column=1,pady=10,padx=0)
 
-
-Button(master, width=20,fg="white", text="Crear Resumen",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=10, column=1,pady=10)
-
-Button(master, width=20,fg="white", text="Seleccionar Carpeta",bg="#002060", font=("Calibri", 12,"bold"), command=seleccionar_carpeta).grid(row=11, column=1,pady=10)
+Button(master, width=20,fg="white", text="Seleccionar Carpeta",bg="#002060", font=("Calibri", 12,"bold"), command=seleccionar_carpeta).grid(row=11, column=1,pady=10,padx=60)
 
 master.mainloop()
 
