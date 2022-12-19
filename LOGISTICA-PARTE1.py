@@ -121,7 +121,7 @@ master.title("Inteligencia Comercial")
 master.geometry("370x300")
 
 # Etiquetas
-Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 15,"bold")).grid(padx=60,row=0,column=1,pady=20)
+Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 18,"bold")).grid(padx=40,row=0,column=1,pady=20)
 
 
 notif = Label(master, font=("Calibri", 14,"bold"))
@@ -130,8 +130,7 @@ notif.config(fg="green", text="Inicio")
 
 # Botones
 
-Button(master, width=20,fg="white", text="Actualizado de Pestañas",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=9, column=1,pady=10,padx=0)
-
+Button(master, width=20,fg="white", text="Actualizar Datos",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=9, column=1,pady=10,padx=0)
 
 Button(master, width=20,fg="white", text="Crear Resumen",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=10, column=1,pady=10,padx=0)
 
