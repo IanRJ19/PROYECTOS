@@ -102,6 +102,11 @@ def actualizado():
         wsheet = gsheet.worksheet("Terminales 02.12")
         wsheet.update([terminales2.columns.values.tolist()]+terminales2.values.tolist())
 
+        #Imprimimos tiempo
+        tiempo=round((time.time() - start_time),2)
+        texto="Proceso completado, tomó "+str(tiempo)+" segundos"
+        notif.config(fg="green", text=texto)
+
     except Exception:
         if "ruta" in globals():
             notif.config(fg="red", text="Error en el proceso")
@@ -113,10 +118,10 @@ def actualizado():
 # Pantalla Principal
 master = Tk()
 master.title("Inteligencia Comercial")
-master.geometry("300x300")
+master.geometry("370x300")
 
 # Etiquetas
-Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 15,"bold")).grid(padx=0,row=0,column=1,pady=20)
+Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 15,"bold")).grid(padx=60,row=0,column=1,pady=20)
 
 
 notif = Label(master, font=("Calibri", 14,"bold"))
