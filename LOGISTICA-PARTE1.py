@@ -119,23 +119,23 @@ master.title("Inteligencia Comercial")
 master.geometry("370x300")
 
 # Etiquetas
-Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 15,"bold")).grid(padx=70,row=0,column=2,pady=20)
+Label(master, text="Proceso Automático Logística", fg="black", font=("Calibri", 15,"bold")).grid(padx=70,row=0,column=1,pady=20)
 
 
 notif = Label(master, font=("Calibri", 14,"bold"))
-notif.grid(sticky=N, pady=20, row=12, column=2)
+notif.grid(sticky=N, pady=20, row=12, column=1)
 notif.config(fg="green", text="Inicio")
 
 # Botones
 
-Button(master, width=20,fg="white", text="Actualizado de Pestañas",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=9, column=2,pady=10)
+Button(master, width=20,fg="white", text="Actualizado de Pestañas",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=9, column=1,pady=10)
 
 
 
 
-Button(master, width=20,fg="white", text="Crear Resumen",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=10, column=2,pady=10)
+Button(master, width=20,fg="white", text="Crear Resumen",bg="#002060", font=("Calibri", 12,"bold"), command=actualizado).grid(row=10, column=1,pady=10)
 
-Button(master, width=20,fg="white", text="Seleccionar carpeta",bg="#002060", font=("Calibri", 12,"bold"), command=seleccionar_carpeta).grid(row=11, column=2,pady=10)
+Button(master, width=20,fg="white", text="Seleccionar Carpeta",bg="#002060", font=("Calibri", 12,"bold"), command=seleccionar_carpeta).grid(row=11, column=1,pady=10)
 
 master.mainloop()
 
