@@ -8,6 +8,9 @@ def seleccionar_carpeta():
     ruta = str(ruta)
     print(ruta)
 
+    archivos=os.listdir(ruta)
+    print(archivos)
+
     if ruta:
         notif.config(fg="green", text="Carpeta Seleccionada")
         if not os.path.exists(ruta+"/"+"RESULTADOS"):
@@ -25,6 +28,8 @@ def actualizado():
         start_time = time.time()
         #Lectura de archivos
         archivos=os.listdir(ruta)
+
+        print(archivos)
 
         def read_excel(path: str, sheet_name: str) -> pd.DataFrame:
             buffer = StringIO()
@@ -58,7 +63,7 @@ def actualizado():
         from oauth2client.service_account import ServiceAccountCredentials
         gc = gspread.service_account(filename="H:\Mi unidad\LLAVES\ActivarGoogleSheetIan.json")
         gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1JYaYF64CIkWeyS3rpxmTN15WNae5yS0oPHIaXLUi21M")
-        wsheet = gsheet.worksheet("articulos 28.11")
+        wsheet = gsheet.worksheet("articulos 05.12")
         wsheet.update([articulos.columns.values.tolist()]+articulos.values.tolist())
 
 
@@ -80,7 +85,7 @@ def actualizado():
         terminales = terminales.drop_duplicates(subset="NÚMERO SERIE")
 
         #INSERTANDO DATOS EN GS ENVIADOS
-        wsheet = gsheet.worksheet("Enviado 28.11")
+        wsheet = gsheet.worksheet("Enviado 02.12")
         wsheet.update([terminales.columns.values.tolist()]+terminales.values.tolist())
 
 
