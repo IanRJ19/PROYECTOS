@@ -28,35 +28,29 @@ def actualizar():
         import os
         start_time = time.time()
         #Lectura de archivos
+        ruta="C:/Users/Rayzek/Desktop/Nueva carpeta"
         archivos=os.listdir(ruta)
 
         print(archivos)
-
-        def read_excel(path: str, sheet_name: str) -> pd.DataFrame:
-            buffer = StringIO()
-            Xlsx2csv(path, outputencoding="utf-8", sheet_name=sheet_name).convert(buffer)
-            buffer.seek(0)
-            agentes = pd.read_csv(buffer)
-            return agentes
 
         for i in range(len(archivos)):
             a=archivos[i]
             if ("ReporteArticulos" in a):
                 path=ruta+"/"+a
-                articulos=read_excel(path,"Hoja 1")
+                articulos=pd.read_excel(path,"Hoja 1")
             elif ("ReporteTerminales" in a):
                 path=ruta+"/"+a
-                terminales=read_excel(path,"Hoja 1")
+                terminales=pd.read_excel(path,"Hoja 1")
 
-        cabeza = articulos.iloc[0]
-        articulos = articulos[1:]
+
+        cabeza = articulos.iloc[1]
+        articulos = articulos[2:]
         articulos.columns = cabeza
         articulos["MODELO"]=articulos["ARTÍCULO"].str[0:6]
         lista = ["AXIUM","APOS A","APOS M","APOS D","ICT220","ICT250"]
         condicion = articulos["MODELO"].isin(lista)
         articulos=articulos[condicion]
         articulos=articulos.drop_duplicates(subset='NUMERO SERIE')
-
 
         #INSERTANDO DATOS DE ARTICULOS AL GS
         import pandas as pd 
@@ -70,8 +64,8 @@ def actualizar():
 
         #TRABAJO EXCEL TERMINALES
 
-        cabeza = terminales.iloc[0]
-        terminales = terminales[1:]
+        cabeza = terminales.iloc[1]
+        terminales = terminales[2:]
         terminales.columns = cabeza
         terminales["x"]=terminales["ARTÍCULO"].str[0:6]
         lista = ["AXIUM","APOS A","APOS M","APOS D","ICT220","ICT250"]
