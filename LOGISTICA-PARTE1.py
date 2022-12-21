@@ -1,13 +1,15 @@
-
 #TRABAJO EXCEL ARTICULOS
 from xlsx2csv import Xlsx2csv
 from io import StringIO
 import pandas as pd
 import time
+import os
 start_time = time.time()
 #Lectura de archivos
+ruta="C:/Users/Rayzek/Desktop/Nueva carpeta"
+archivos=os.listdir(ruta)
 
-
+print(archivos)
 
 def read_excel(path: str, sheet_name: str) -> pd.DataFrame:
     buffer = StringIO()
@@ -22,7 +24,7 @@ for i in range(len(archivos)):
         path=ruta+"/"+a
         articulos=read_excel(path,"Hoja 1")
     elif ("ReporteTerminales" in a):
-        path=r"H:\Mi unidad\TRABAJO\PROCESOS_AUTOMATICOS\Script_Logistica\ReporteTerminales 2022.12.13.xlsx"
+        path=ruta+"/"+a
         terminales=read_excel(path,"Hoja 1")
 
 cabeza = articulos.iloc[0]
@@ -79,4 +81,3 @@ terminales2 = terminales2.drop_duplicates(subset='TERMINAL/DNI/RUC')
 #INSERTANDO DATOS EN GS TERMINALES
 wsheet = gsheet.worksheet("Terminales 02.12")
 wsheet.update([terminales2.columns.values.tolist()]+terminales2.values.tolist())
-

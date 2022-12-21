@@ -25,6 +25,7 @@ def actualizar():
         from io import StringIO
         import pandas as pd
         import time
+        import os
         start_time = time.time()
         #Lectura de archivos
         archivos=os.listdir(ruta)
@@ -44,7 +45,7 @@ def actualizar():
                 path=ruta+"/"+a
                 articulos=read_excel(path,"Hoja 1")
             elif ("ReporteTerminales" in a):
-                path=r"H:\Mi unidad\TRABAJO\PROCESOS_AUTOMATICOS\Script_Logistica\ReporteTerminales 2022.12.13.xlsx"
+                path=ruta+"/"+a
                 terminales=read_excel(path,"Hoja 1")
 
         cabeza = articulos.iloc[0]
