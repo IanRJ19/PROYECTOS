@@ -10,8 +10,6 @@ def seleccionar_carpeta():
 
     if ruta:
         notif.config(fg="green", text="Carpeta Seleccionada")
-        if not os.path.exists(ruta+"/"+"RESULTADOS"):
-            os.makedirs(ruta+"/"+"RESULTADOS")
     else:
         notif.config(fg="red", text="Carpeta No Seleccionada")
 
