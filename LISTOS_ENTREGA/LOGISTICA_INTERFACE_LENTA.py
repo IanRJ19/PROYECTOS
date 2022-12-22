@@ -8,9 +8,6 @@ def seleccionar_carpeta():
     ruta = str(ruta)
     print(ruta)
 
-    archivos=os.listdir(ruta)
-    print(archivos)
-
     if ruta:
         notif.config(fg="green", text="Carpeta Seleccionada")
         if not os.path.exists(ruta+"/"+"RESULTADOS"):
@@ -29,7 +26,6 @@ def actualizar():
         start_time = time.time()
         #Lectura de archivos
         archivos=os.listdir(ruta)
-
         print(archivos)
 
         for i in range(len(archivos)):
