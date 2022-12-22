@@ -28,7 +28,6 @@ def actualizar():
         import os
         start_time = time.time()
         #Lectura de archivos
-        ruta="C:/Users/Rayzek/Desktop/Nueva carpeta"
         archivos=os.listdir(ruta)
 
         print(archivos)
