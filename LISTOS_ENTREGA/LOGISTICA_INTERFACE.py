@@ -148,6 +148,7 @@ def resumen():
         DF_ASIGNADOS_PERSONAL=Base[Base["Tipo"]=="DNI"]
         DF_INSTALADOS_1=Base[(Base["Estado terminal"]=="Instalado") & (Base["ESTADO SG"].isin(["Despachado","Asignado"]))]
         DF_ESTADO_BYS=Base.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="Estado terminal",fill_value=0, margins=True)
+        TABLA1=DF_ESTADO_BYS
         DF_ESTADO_DEBAJA=Base[Base["MODELO"].isin(["ICT 220", "ICT 250","APOS"])]
 
 
@@ -182,6 +183,7 @@ def resumen():
 
         #POS Asignado a Empresas
         DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",fill_value=0, margins=True)
+        TABLA2=DF_ASIGNADOS_CLIENTES
         DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.reset_index()
         DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.set_index('OC')
         DF_ASIGNADOS_CLIENTES=DF_ASIGNADOS_CLIENTES.loc["All":]
@@ -193,6 +195,7 @@ def resumen():
 
         #POS Asignado a Personal Activo y Cesado
         DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="tipo DNI",fill_value=0, margins=True)
+        TABLA3=DF_ASIGNADOS_PERSONAL
         DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.reset_index()
         DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.set_index("OC")
         DF_ASIGNADOS_PERSONAL=DF_ASIGNADOS_PERSONAL.loc["All":]
@@ -205,6 +208,7 @@ def resumen():
 
         #Instalados AKN (1) y (+2)
         DF_INSTALADOS_1=DF_INSTALADOS_1.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="x",fill_value=0, margins=True)
+        TABLA4=DF_INSTALADOS_1
         DF_INSTALADOS_2=DF_INSTALADOS_1
         DF_INSTALADOS_1=DF_INSTALADOS_1.reset_index()
         DF_INSTALADOS_1=DF_INSTALADOS_1.replace('ICT 220', "Instalados AKN (1) ICT")
@@ -244,6 +248,7 @@ def resumen():
 
         #POS DE BAJA AKN
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.pivot_table(values='NUMERO SERIE', index=["OC",'MODELO'], aggfunc="count",columns="Estado terminal",fill_value=0, margins=True)
+        TABLA5=DF_ESTADO_DEBAJA
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.reset_index()
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.replace("ICT 220", "Por recuperar AKN de baja ICT")
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.replace('ICT 250', "Por recuperar AKN de baja ICT")
@@ -260,6 +265,22 @@ def resumen():
         UNIDO=UNIDO.reset_index()
         UNIDO=UNIDO.drop("index", axis=1)
         wsheet.update([UNIDO.columns.values.tolist()]+UNIDO.values.tolist())
+
+
+        TABLA1=TABLA1.reset_index()
+        TABLA2=TABLA2.reset_index()
+        TABLA3=TABLA3.reset_index()
+        TABLA4=TABLA4.reset_index()
+        TABLA5=TABLA5.reset_index()
+
+        # INSTAURAMOS EL CONTROLADOR DE PESTAÑA
+        tsheet = gsheet.worksheet("Tablas")
+        tsheet.clear()
+        tsheet.update([TABLA1.columns.values.tolist()]+TABLA1.values.tolist())
+        tsheet.append_rows([TABLA2.columns.values.tolist()] + TABLA2.values.tolist(), value_input_option="USER_ENTERED")
+        tsheet.append_rows([TABLA3.columns.values.tolist()] + TABLA3.values.tolist(), value_input_option="USER_ENTERED")
+        tsheet.append_rows([TABLA4.columns.values.tolist()] + TABLA4.values.tolist(), value_input_option="USER_ENTERED")
+        tsheet.append_rows([TABLA5.columns.values.tolist()] + TABLA5.values.tolist(), value_input_option="USER_ENTERED")
 
         #Imprimimos tiempo
         tiempo=round((time.time() - start_time),2)
