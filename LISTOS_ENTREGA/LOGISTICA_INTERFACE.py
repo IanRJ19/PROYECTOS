@@ -47,6 +47,7 @@ def actualizar():
         articulos = articulos[1:]
         articulos.columns = cabeza
         articulos["MODELO"]=articulos["ARTÍCULO"].str[0:6]
+        articulos["MODELO"]=articulos["MODELO"].str.replace(" ", "")
         lista = ["AXIUM","APOS A","APOS M","APOS D","ICT220","ICT250"]
         condicion = articulos["MODELO"].isin(lista)
         articulos=articulos[condicion]
