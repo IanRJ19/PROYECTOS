@@ -57,9 +57,9 @@ def actualizar():
         import pandas as pd 
         import gspread
         from oauth2client.service_account import ServiceAccountCredentials
-        gc = gspread.service_account(filename="H:\Mi unidad\LLAVES\ActivarGoogleSheetIan.json")
+        gc = gspread.service_account(filename="ActivarGoogleSheetIan.json")
         gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1JYaYF64CIkWeyS3rpxmTN15WNae5yS0oPHIaXLUi21M")
-        wsheet = gsheet.worksheet("articulos 05.12")
+        wsheet = gsheet.worksheet("articulos")
         wsheet.update([articulos.columns.values.tolist()]+articulos.values.tolist())
 
 
@@ -81,7 +81,7 @@ def actualizar():
         terminales = terminales.drop_duplicates(subset="NÚMERO SERIE")
 
         #INSERTANDO DATOS EN GS ENVIADOS
-        wsheet = gsheet.worksheet("Enviado 02.12")
+        wsheet = gsheet.worksheet("Enviado")
         wsheet.update([terminales.columns.values.tolist()]+terminales.values.tolist())
 
 
@@ -95,7 +95,7 @@ def actualizar():
         terminales2 = terminales2.drop_duplicates(subset='TERMINAL/DNI/RUC')
 
         #INSERTANDO DATOS EN GS TERMINALES
-        wsheet = gsheet.worksheet("Terminales 02.12")
+        wsheet = gsheet.worksheet("Terminales")
         wsheet.update([terminales2.columns.values.tolist()]+terminales2.values.tolist())
 
         #Imprimimos tiempo
