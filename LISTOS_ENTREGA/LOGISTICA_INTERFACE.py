@@ -124,7 +124,7 @@ def resumen():
         import gspread
         from oauth2client.service_account import ServiceAccountCredentials
 
-        gc = gspread.service_account(filename="H:\Mi unidad\LLAVES\ActivarGoogleSheetIan.json")
+        gc = gspread.service_account(filename="ActivarGoogleSheetIan.json")
         gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1JYaYF64CIkWeyS3rpxmTN15WNae5yS0oPHIaXLUi21M")
 
         #CREAMOS LA PESTAÑA DEL RESUMEN
