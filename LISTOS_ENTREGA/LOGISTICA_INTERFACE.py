@@ -47,7 +47,7 @@ def actualizar():
         articulos = articulos[1:]
         articulos.columns = cabeza
         articulos["MODELO"]=articulos["ARTÍCULO"].str[0:6]
-        articulos["MODELO"]=articulos["MODELO"].str.replace(" ", "")
+        articulos["MODELO"]=articulos["MODELO"].str.replace("AXIUM ", "AXIUM")
         lista = ["AXIUM","APOS A","APOS M","APOS D","ICT220","ICT250"]
         condicion = articulos["MODELO"].isin(lista)
         articulos=articulos[condicion]
@@ -166,7 +166,11 @@ def resumen():
         DF_POS_INICIAL=df1
         DF_POS_INICIAL=DF_POS_INICIAL.set_index("OC")
         DF_POS_INICIAL=DF_POS_INICIAL.loc["All":]
-        DF_POS_INICIAL=DF_POS_INICIAL.drop(["MODELO",'-',"Despachado","Disponible","Asignado",'Bloqueado', 'De baja', 'En mantenimiento', 'Malogrado', 'Por Ubicar'], axis=1)
+        if "-" in ( DF_POS_INICIAL.columns):
+            DF_POS_INICIAL=DF_POS_INICIAL.drop(["MODELO","Despachado","-","Disponible","Asignado",'Bloqueado', 'De baja', 'En mantenimiento', 'Malogrado', 'Por Ubicar'], axis=1)
+        else:
+            DF_POS_INICIAL=DF_POS_INICIAL.drop(["MODELO","Despachado","Disponible","Asignado",'Bloqueado', 'De baja', 'En mantenimiento', 'Malogrado', 'Por Ubicar'], axis=1)
+
         DF_POS_INICIAL=DF_POS_INICIAL.reset_index()
         DF_POS_INICIAL.columns=["DESCRIPCIÓN","CANTIDAD"]
         DF_POS_INICIAL=DF_POS_INICIAL.replace("All", "POS INICIAL")
@@ -239,7 +243,10 @@ def resumen():
         DF_ESTADO_BYS=DF_ESTADO_BYS.set_index("OC")
         DF_ESTADO_BYS=DF_ESTADO_BYS.loc["All":]
         DF_ESTADO_BYS=DF_ESTADO_BYS.reset_index()
-        DF_ESTADO_BYS=DF_ESTADO_BYS.drop(['OC', 'MODELO', '', '-', 'Baja', 'Instalado', 'All'], axis=1)
+        if "-" in ( DF_ESTADO_BYS.columns):
+            DF_ESTADO_BYS=DF_ESTADO_BYS.drop(['OC', 'MODELO', '',"-", 'Baja', 'Instalado', 'All'], axis=1)
+        else:
+            DF_ESTADO_BYS=DF_ESTADO_BYS.drop(['OC', 'MODELO', '', 'Baja', 'Instalado', 'All'], axis=1)
         DF_ESTADO_BYS=DF_ESTADO_BYS.transpose()
         DF_ESTADO_BYS=DF_ESTADO_BYS.reset_index()
         DF_ESTADO_BYS=DF_ESTADO_BYS.replace('Pre Agente', "Instalados AKN preagente")
@@ -256,7 +263,10 @@ def resumen():
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.replace('APOS', "Por recuperar AKN de baja APOS")
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.groupby("MODELO").sum()
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.reset_index()
-        DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(['Pre Agente', 'Suspendido', '', '-', 'Instalado', 'All'], axis=1)
+        if "-" in ( DF_ESTADO_DEBAJA.columns):
+            DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(['Pre Agente', 'Suspendido', '', '-', 'Instalado', 'All'], axis=1)
+        else:
+            DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(['Pre Agente', 'Suspendido', '', 'Instalado', 'All'], axis=1)
         DF_ESTADO_DEBAJA.columns=["DESCRIPCIÓN","CANTIDAD"]
         DF_ESTADO_DEBAJA=DF_ESTADO_DEBAJA.drop(0, axis=0)
 
