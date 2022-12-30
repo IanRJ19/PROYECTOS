@@ -59,6 +59,7 @@ def actualizar():
         import gspread
         from oauth2client.service_account import ServiceAccountCredentials
         gc = gspread.service_account(filename="ActivarGoogleSheetIan.json")
+        #Al convertir en exe, es importante llamar a la credencial directamente.
         gsheet = gc.open_by_url("https://docs.google.com/spreadsheets/d/1JYaYF64CIkWeyS3rpxmTN15WNae5yS0oPHIaXLUi21M")
         wsheet = gsheet.worksheet("articulos")
         wsheet.update([articulos.columns.values.tolist()]+articulos.values.tolist())
