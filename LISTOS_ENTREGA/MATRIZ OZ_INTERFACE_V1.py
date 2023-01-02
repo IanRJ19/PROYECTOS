@@ -360,7 +360,7 @@ def script():
         cruce_info = pd.merge(macros_unidos,constancias_unidas,how='inner',on='KEY')
         toda_info = pd.merge(macros_unidos,constancias_unidas,how='outer',on='KEY')
 
-        toda_info["¿MATCH?"] = np.where(toda_info["DNI_x"].astype(str).map(len)<toda_info["DNI_y"].astype(str).map(len) , "FALTA CONSTANCIA",np.where(toda_info["DNI_x"].astype(str).map(len)>toda_info["DNI_y"].astype(str).map(len) , "FALTA MACRO","SÍ"))
+        toda_info["¿MATCH?"] = np.where(toda_info["DNI_x"].astype(str).map(len)<toda_info["DNI_y"].astype(str).map(len) , "FALTA MACRO",np.where(toda_info["DNI_x"].astype(str).map(len)>toda_info["DNI_y"].astype(str).map(len) , "FALTA CONSTANCIA","SÍ"))
         #ARREGLANDO FORMATO
 
 
