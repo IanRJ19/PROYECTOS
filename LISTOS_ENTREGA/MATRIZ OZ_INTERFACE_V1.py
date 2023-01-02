@@ -46,10 +46,17 @@ def script():
 
                 else:
                     print(a)
-                    b=pd.read_excel(ruta+"/"+a,skiprows=32,dtype=str)
+                    x=pd.read_excel(ruta+"/"+a,dtype=str)
+                    probando=x.iloc[6,0]
 
-                    #LECTURA PARA ADICIONALES
-                    d=pd.read_excel(ruta+"/"+a,skiprows=15,dtype=str)
+                    if "Ejecutivo" in probando:
+                        b=pd.read_excel(ruta+"/"+a,skiprows=32,dtype=str)
+                        #LECTURA PARA ADICIONALES
+                        d=pd.read_excel(ruta+"/"+a,skiprows=15,dtype=str)                
+                    else:
+                        b=pd.read_excel(ruta+"/"+a,skiprows=30,dtype=str)
+                        #LECTURA PARA ADICIONALES
+                        d=pd.read_excel(ruta+"/"+a,skiprows=13,dtype=str)
                     
                     #CAPTANDO OPERACION
                     op1=d.iloc[0,0]
@@ -64,10 +71,11 @@ def script():
                     #CAPTANDO FECHA
                     fecha=d.iloc[7,1][0:10]
                     b["FECHA PAGO"]=fecha
+                    print(b.columns)
 
+                    b=b[b["Doc.Identidad"].notnull()]
                     #ADICIONANDO
                     df_BBVA_C.append(b)
-                    
 
             elif ("Scot" in a):
                 if ("Macro" in a):
@@ -260,7 +268,7 @@ def script():
 
             SCOT_C_EMP_PROV = SCOT_C_EMP_PROV[SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[0:4] != ' COM']
 
-            SCOT_C_EMP_PROV = pd.DataFrame({'BENEFICIARIO' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[1:26],'DNI' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[27:38],'IMPORTE' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[48:58],'ESTADO' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[99:103],"OZ":SCOT_C_EMP_PROV["OZ"],"TIPO DE DOCUMENTO":"R","CÓDIGO OPERACIÓN":SCOT_C_EMP_PROV["CÓDIGO OPERACIÓN"],"FECHA PAGO":SCOT_C_EMP_PROV["FECHA PAGO"]})
+            SCOT_C_EMP_PROV = pd.DataFrame({'BENEFICIARIO' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[1:26],'DNI' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[27:38],'IMPORTE' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[48:58],'ESTADO' : SCOT_C_EMP_PROV[' SCOTIABANK PERU S.A.A.'].str[99:],"OZ":SCOT_C_EMP_PROV["OZ"],"TIPO DE DOCUMENTO":"R","CÓDIGO OPERACIÓN":SCOT_C_EMP_PROV["CÓDIGO OPERACIÓN"],"FECHA PAGO":SCOT_C_EMP_PROV["FECHA PAGO"]})
 
             SCOT_C_EMP_PROV['IMPORTE']= SCOT_C_EMP_PROV['IMPORTE'].str.replace(",", "")
             SCOT_C_EMP_PROV["BANCO"]="SCOTIABANK"
@@ -285,7 +293,7 @@ def script():
 
             SCOT_C_EMP_VAR = SCOT_C_EMP_VAR[SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[0:4] != ' COM']
 
-            SCOT_C_EMP_VAR = pd.DataFrame({'BENEFICIARIO' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[1:26],'DNI' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[27:38],'IMPORTE' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[48:58],'ESTADO' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[99:103],"OZ":SCOT_C_EMP_VAR["OZ"],"TIPO DE DOCUMENTO":"L","CÓDIGO OPERACIÓN":SCOT_C_EMP_VAR["CÓDIGO OPERACIÓN"],"FECHA PAGO":SCOT_C_EMP_VAR["FECHA PAGO"]})
+            SCOT_C_EMP_VAR = pd.DataFrame({'BENEFICIARIO' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[1:26],'DNI' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[27:38],'IMPORTE' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[48:58],'ESTADO' : SCOT_C_EMP_VAR[' SCOTIABANK PERU S.A.A.'].str[99:],"OZ":SCOT_C_EMP_VAR["OZ"],"TIPO DE DOCUMENTO":"L","CÓDIGO OPERACIÓN":SCOT_C_EMP_VAR["CÓDIGO OPERACIÓN"],"FECHA PAGO":SCOT_C_EMP_VAR["FECHA PAGO"]})
 
             SCOT_C_EMP_VAR['IMPORTE']= SCOT_C_EMP_VAR['IMPORTE'].str.replace(",", "")
             SCOT_C_EMP_VAR["BANCO"]="SCOTIABANK"

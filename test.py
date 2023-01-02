@@ -37,9 +37,9 @@ for i in range(len(archivos)):
                 #LECTURA PARA ADICIONALES
                 d=pd.read_excel(ruta+"/"+a,skiprows=15,dtype=str)                
             else:
-                b=pd.read_excel(ruta+"/"+a,skiprows=34,dtype=str)
+                b=pd.read_excel(ruta+"/"+a,skiprows=30,dtype=str)
                 #LECTURA PARA ADICIONALES
-                d=pd.read_excel(ruta+"/"+a,skiprows=17,dtype=str)
+                d=pd.read_excel(ruta+"/"+a,skiprows=13,dtype=str)
             
             #CAPTANDO OPERACION
             op1=d.iloc[0,0]
@@ -54,6 +54,8 @@ for i in range(len(archivos)):
             #CAPTANDO FECHA
             fecha=d.iloc[7,1][0:10]
             b["FECHA PAGO"]=fecha
+            print(b.columns)
+
             b=b[b["Doc.Identidad"].notnull()]
             #ADICIONANDO
             df_BBVA_C.append(b)
