@@ -185,17 +185,17 @@ def script():
             BBVA_C["DNI"]=BBVA_C["DNI"].str.slice(start=3, stop=15)
             BBVA_C=BBVA_C[["DNI","BENEFICIARIO","MONEDA","IMPORTE","ESTADO","TIPO DE DOCUMENTO","OZ","CÓDIGO OPERACIÓN","FECHA PAGO"]]
             BBVA_C["BANCO"]="BBVA"
-            if df_BBVA_M:
+        else:
+            BBVA_C=pd.DataFrame()
+
+        if df_BBVA_M:
                 #BBVA MACRO 
                 BBVA_M=pd.concat(df_BBVA_M)
                 BBVA_M=BBVA_M.rename(columns={'DOI Número': 'DNI',"Nombre de Beneficiario":"BENEFICIARIO","Importe Abonar":"IMPORTE","Indicador Aviso":"ESTADO","Referencia":"REF"})
                 BBVA_M = BBVA_M[["DNI", "BENEFICIARIO","IMPORTE","REF"]]
                 BBVA_M=BBVA_M[BBVA_M["DNI"].notnull()]
-            else:
-                BBVA_M=pd.DataFrame()
         else:
-            BBVA_C=pd.DataFrame()
-            BBVA_M=pd.DataFrame()
+                BBVA_M=pd.DataFrame()
 
         ############################################################################################
         if df_SCOT_C_TBK_VAR:
@@ -206,8 +206,10 @@ def script():
             SCOT_C_TBK_VAR["TIPO DE DOCUMENTO"]="L"
             SCOT_C_TBK_VAR=SCOT_C_TBK_VAR[["DNI","BENEFICIARIO","MONEDA","IMPORTE","ESTADO","TIPO DE DOCUMENTO","OZ","CÓDIGO OPERACIÓN","FECHA PAGO"]]
             SCOT_C_TBK_VAR["BANCO"]="SCOTIABANK"
+        else:
+            SCOT_C_TBK_VAR=pd.DataFrame()
 
-
+        if df_SCOT_M_TBK_VAR:
             #SCOT MACRO TBK VARIOS
             SCOT_M_TBK_VAR = pd.concat(df_SCOT_M_TBK_VAR)
             SCOT_M_TBK_VAR = SCOT_M_TBK_VAR.loc[:, ['DOCUMENTO DE IDENTIDAD', 'NOMBRE DEL EMPLEADO', 'MONTO A PAGAR', 'REFERENCIA']]
@@ -216,8 +218,9 @@ def script():
             SCOT_M_TBK_VAR['DOC'] = SCOT_M_TBK_VAR['DOC'].astype('str')
             SCOT_M_TBK_VAR['T_DOC'] = 'DNI'
         else:
-            SCOT_C_TBK_VAR=pd.DataFrame()
             SCOT_M_TBK_VAR=pd.DataFrame()
+
+        
 
         ###########################################################################################
         if df_SCOT_C_TBK_PROV:
@@ -225,15 +228,15 @@ def script():
             SCOT_C_TBK_PROV=pd.concat(df_SCOT_C_TBK_PROV)
             SCOT_C_TBK_PROV=SCOT_C_TBK_PROV.rename(columns={'Documento/Nro Fact': 'DNI',"Moneda":"MONEDA","Monto":"IMPORTE","Estado":"ESTADO","Beneficiario/F. Fact - Vencimiento ":"BENEFICIARIO"})
             SCOT_C_TBK_PROV=SCOT_C_TBK_PROV.drop(['Unnamed: 7','Unnamed: 8'], axis=1)
-
             SCOT_C_TBK_PROV["TIPO DE DOCUMENTO"]="R"
             SCOT_C_TBK_PROV=SCOT_C_TBK_PROV[["DNI","BENEFICIARIO","MONEDA","IMPORTE","ESTADO","TIPO DE DOCUMENTO","OZ","CÓDIGO OPERACIÓN","FECHA PAGO"]]
-
             SCOT_C_TBK_PROV = SCOT_C_TBK_PROV[SCOT_C_TBK_PROV["ESTADO"].notnull()]
             SCOT_C_TBK_PROV=SCOT_C_TBK_PROV[SCOT_C_TBK_PROV["ESTADO"].str.contains("A|E|I|O|U", case=True, regex=True)]
-
-
             SCOT_C_TBK_PROV["BANCO"]="SCOTIABANK"
+        else:
+            SCOT_C_TBK_PROV=pd.DataFrame()
+
+        if df_SCOT_M_TBK_PROV:    
             #SCOT MACRO TBK PROV
             SCOT_M_TBK_PROV = pd.concat(df_SCOT_M_TBK_PROV)
             SCOT_M_TBK_PROV = SCOT_M_TBK_PROV.loc[:, ['RUC / \nCOD. VENDOR', 'RAZON SOCIAL', 'MONTO A PAGAR', 'NRO FACTURA']]
@@ -247,7 +250,7 @@ def script():
             SCOT_M_TBK_PROV["FECHA PAGO"]=fecha_SCOT_M_Prov_TBK
         else:
             SCOT_M_TBK_PROV=pd.DataFrame()
-            SCOT_C_TBK_PROV=pd.DataFrame()
+            
 
         ###########################################################################################
         if df_SCOT_C_EMP_PROV:
@@ -261,7 +264,10 @@ def script():
 
             SCOT_C_EMP_PROV['IMPORTE']= SCOT_C_EMP_PROV['IMPORTE'].str.replace(",", "")
             SCOT_C_EMP_PROV["BANCO"]="SCOTIABANK"
+        else:
+            SCOT_C_EMP_PROV=pd.DataFrame()
 
+        if df_SCOT_M_EMP_PROV:
             #SCOT MACRO EMP PROV
             SCOT_M_EMP_PROV = pd.concat(df_SCOT_M_EMP_PROV)
             SCOT_M_EMP_PROV = SCOT_M_EMP_PROV.loc[:, ['RUC DEL\nPROVEEDOR', 'NOMBRE DEL\nPROVEEDOR','IMPORTE', 'REFERENCIA O\nFACTURA']]
@@ -269,9 +275,7 @@ def script():
             SCOT_M_EMP_PROV['T_DOC'] = 'RUC'
         else:
             SCOT_M_EMP_PROV=pd.DataFrame()
-            SCOT_C_EMP_PROV=pd.DataFrame()
-
-
+            
         ###########################################################################################
         if df_SCOT_C_EMP_VAR:
             # SCOT CONSTANCIA EMP VAR
@@ -285,14 +289,17 @@ def script():
 
             SCOT_C_EMP_VAR['IMPORTE']= SCOT_C_EMP_VAR['IMPORTE'].str.replace(",", "")
             SCOT_C_EMP_VAR["BANCO"]="SCOTIABANK"
+        else:
+            SCOT_C_EMP_VAR=pd.DataFrame()
 
+        if df_SCOT_M_EMP_VAR:
             #SCOT MACRO EMP VAR
             SCOT_M_EMP_VAR = pd.concat(df_SCOT_M_EMP_VAR)
             SCOT_M_EMP_VAR = SCOT_M_EMP_VAR.loc[:, ['TIPO DE\nDOCUMENTO', 'DOCUMENTO IDENTIDAD',    'NOMBRE\nBENEFICIARIO', 'IMPORTE\n', 'REFERENCIA O\nFACTURA']]
             SCOT_M_EMP_VAR.columns = ['T_DOC','DOC','NOMBRE','IMPORTE','REF']
         else:
             SCOT_M_EMP_VAR=pd.DataFrame()
-            SCOT_C_EMP_VAR=pd.DataFrame()
+            
 
 
 

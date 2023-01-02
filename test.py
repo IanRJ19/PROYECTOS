@@ -168,17 +168,18 @@ if df_BBVA_C:
     BBVA_C["DNI"]=BBVA_C["DNI"].str.slice(start=3, stop=15)
     BBVA_C=BBVA_C[["DNI","BENEFICIARIO","MONEDA","IMPORTE","ESTADO","TIPO DE DOCUMENTO","OZ","CÓDIGO OPERACIÓN","FECHA PAGO"]]
     BBVA_C["BANCO"]="BBVA"
-    if df_BBVA_M:
+else:
+    BBVA_C=pd.DataFrame()
+
+if df_BBVA_M:
         #BBVA MACRO 
         BBVA_M=pd.concat(df_BBVA_M)
         BBVA_M=BBVA_M.rename(columns={'DOI Número': 'DNI',"Nombre de Beneficiario":"BENEFICIARIO","Importe Abonar":"IMPORTE","Indicador Aviso":"ESTADO","Referencia":"REF"})
         BBVA_M = BBVA_M[["DNI", "BENEFICIARIO","IMPORTE","REF"]]
         BBVA_M=BBVA_M[BBVA_M["DNI"].notnull()]
-    else:
-        BBVA_M=pd.DataFrame()
 else:
-    BBVA_C=pd.DataFrame()
-    BBVA_M=pd.DataFrame()
+        BBVA_M=pd.DataFrame()
+
 
 ############################################################################################
 if df_SCOT_C_TBK_VAR:
