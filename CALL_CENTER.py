@@ -30,16 +30,13 @@ def ACTUALIZAR_BD():
         for i in range(len(archivos)):
                     a=archivos[i]
                     if ("Detalle" in a):
-                        if ("Macro" in a):
                             print(a)
-                            b=pd.read_excel(ruta+"/"+a,skiprows=4,dtype=str,sheet_name="Detalle")
-                            df_BBVA_M.append(b)
+                            data_BD=pd.read_csv(ruta+"/"+a,sep=',', encoding='latin-1')
+                    else:
+                        print("NO ES" + a)
+        data_BD=data_BD.drop(['Unnamed: 11'], axis=1)
 
-                        else:
-                            print(a)
-                            x=pd.read_excel(ruta+"/"+a,dtype=str)
-                            probando=x.iloc[6,0]
-        def update_spreadsheet(path:str ="C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", _df=CF, startcol:int=1, startrow:int=1, sheet_name:str ="TDSheet"):
+        def update_spreadsheet(path:str ="C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", _df=data_BD, startcol:int=1, startrow:int=1, sheet_name:str ="TDSheet"):
             wb = ox.load_workbook(path)
             ws=wb[sheet_name]
             for row in range(0, _df.shape[0]): #For each row in the dataframe
@@ -47,15 +44,12 @@ def ACTUALIZAR_BD():
                     ws.cell(row = startrow + row, column = startcol + col).value = _df.iat[row, col]
             wb.save(path)
 
-        update_spreadsheet("C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", CF, 1, 2, "BD") 
+        update_spreadsheet("C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", data_BD, 1, 2, "BD") 
         
 
         #Imprimimos tiempo
         tiempo=round((time.time() - start_time),2)
         texto="Proceso completado, tomó "+str(tiempo)+" segundos"
-        #text_var = tkinter.StringVar(value=texto)
-        #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#007E06")
-        #label_1.pack(pady=12, padx=10)
         notif.config(fg="green", text=texto)
 
     except Exception:
@@ -77,18 +71,13 @@ def ACTUALIZAR_BDS():
 
         for i in range(len(archivos)):
                     a=archivos[i]
-                    if ("Detalle" in a):
-                        if ("Macro" in a):
+                    if ("CDRReport" in a):
                             print(a)
-                            b=pd.read_excel(ruta+"/"+a,skiprows=4,dtype=str,sheet_name="Detalle")
-                            df_BBVA_M.append(b)
+                            data_BDS=pd.read_csv(ruta+"/"+a,sep=',', encoding='latin-1')
+                    else:
+                        print("NO ES" + a)
 
-                        else:
-                            print(a)
-                            x=pd.read_excel(ruta+"/"+a,dtype=str)
-                            probando=x.iloc[6,0]
-
-        def update_spreadsheet(path:str ="C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", _df=CF, startcol:int=1, startrow:int=1, sheet_name:str ="TDSheet"):
+        def update_spreadsheet(path:str ="C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", _df=data_BDS, startcol:int=1, startrow:int=1, sheet_name:str ="TDSheet"):
             wb = ox.load_workbook(path)
             ws=wb[sheet_name]
             for row in range(0, _df.shape[0]): #For each row in the dataframe
@@ -96,14 +85,11 @@ def ACTUALIZAR_BDS():
                     ws.cell(row = startrow + row, column = startcol + col).value = _df.iat[row, col]
             wb.save(path)
 
-        update_spreadsheet("C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", da, 1, 2, "BDS") 
+        update_spreadsheet("C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", data_BDS, 1, 2, "BDS") 
 
         #Imprimimos tiempo
         tiempo=round((time.time() - start_time),2)
         texto="Proceso completado, tomó "+str(tiempo)+" segundos"
-        #text_var = tkinter.StringVar(value=texto)
-        #label_1 = customtkinter.CTkLabel(master=ventana, justify=tkinter.LEFT,textvariable=text_var,text_font=("Calibri",14,"bold"),text_color="#007E06")
-        #label_1.pack(pady=12, padx=10)
         notif.config(fg="green", text=texto)
 
     except Exception:
@@ -112,8 +98,6 @@ def ACTUALIZAR_BDS():
         else:
             notif.config(fg="red", text="No ha seleccionado una carpeta")
                         
-###############
-
 ###############
 # Pantalla Principal
 master = Tk()
