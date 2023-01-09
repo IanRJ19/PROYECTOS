@@ -11,8 +11,6 @@ def seleccionar_carpeta():
 
     if ruta:
         notif.config(fg="green", text="Carpeta Seleccionada")
-        if not os.path.exists(ruta+"/"+"RESULTADOS"):
-            os.makedirs(ruta+"/"+"RESULTADOS")
     else:
         notif.config(fg="red", text="Carpeta No Seleccionada")
 
@@ -32,8 +30,6 @@ def ACTUALIZAR_BD():
                     if ("Detalle" in a):
                             print(a)
                             data_BD=pd.read_csv(ruta+"/"+a,sep=',', encoding='latin-1')
-                    else:
-                        print("NO ES" + a)
         data_BD=data_BD.drop(['Unnamed: 11'], axis=1)
 
         def update_spreadsheet(path:str ="C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", _df=data_BD, startcol:int=1, startrow:int=1, sheet_name:str ="TDSheet"):
@@ -74,8 +70,6 @@ def ACTUALIZAR_BDS():
                     if ("CDRReport" in a):
                             print(a)
                             data_BDS=pd.read_csv(ruta+"/"+a,sep=',', encoding='latin-1')
-                    else:
-                        print("NO ES" + a)
 
         def update_spreadsheet(path:str ="C:/Users/Rayzek/Desktop/CALL CENTER/Reporte Indicadores Mensual_202212_.xlsx", _df=data_BDS, startcol:int=1, startrow:int=1, sheet_name:str ="TDSheet"):
             wb = ox.load_workbook(path)
