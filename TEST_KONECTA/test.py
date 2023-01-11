@@ -1,57 +1,68 @@
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-import numpy as np
 import pandas as pd
+import numpy as np
+
 train=pd.read_csv("C:/Users/Rayzek/Desktop/TEST/bd_train.csv")
 test=pd.read_csv("C:/Users/Rayzek/Desktop/TEST/bd_test.csv")
+
 
 #ESTABLECEMOS LA VARIABLE OBJETIVO Y LAS VARIABLES DEPENDIENTES
 y=train["precio"]
 X= train.drop("precio", axis=1)
 
+precio_promedio=y.mean()
 
+
+#######################ENCONTRANDO LA CANTIDAD DE VARIABLES IDEAL A USAR
 from sklearn.linear_model import LinearRegression
 from sklearn.feature_selection import RFE
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 # CREAMOS UN OBJETO DE REGRESIÓN LINEAL
-model = LinearRegression()
+modelo = LinearRegression()
 
-lista_VARS = []
-lista_numeros = []
+Lista_RMSE = []
+Posicion_RMSE = []
 elementos=len(X.columns)
 
+#COMENZAREMOS A ITERAR PARA VER CON QUE CANTIDAD DE VARIABLES SE TIENE EL MENOR RMSE
 for i in range(elementos):
-    # CREAMOS UN OBJETO RFE PARA SELECCIONAR 5 CARACTERÍSTICAS
-    rfe = RFE(model,n_features_to_select=i+1)
+    # CREAMOS UN OBJETO RFE PARA SELECCIONAR n CARACTERÍSTICAS
+    rfe = RFE(modelo,n_features_to_select=i+1)
 
     # AJUSTAMOS EL MODELO RFE AL CONJUNTO DE DATOS
     X_rfe = rfe.fit_transform(X, y)
     x_train, x_test, y_train, y_test = train_test_split(X_rfe, y,test_size=0.3,random_state=42)
 
     #ENTRENAMOS EL NUEVO MODELO
-    model.fit(x_train, y_train)
+    modelo.fit(x_train, y_train)
 
-    #print(X.columns[(rfe.get_support())])
-    y_pred = model.predict(x_test)
+    y_pred = modelo.predict(x_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    lista_VARS.append(rmse)
+    Lista_RMSE.append(rmse)
     extra=i+1
-    lista_numeros.append(extra)
-    #print(str(i+1)+" Variables seleccionadas"+" RMSE: "+ str(rmse))
+    Posicion_RMSE.append(extra)
 
-posicion=pd.Series(lista_VARS).idxmin()
-var_usar=lista_numeros[posicion]
+posicion=pd.Series(Lista_RMSE).idxmin()
+RMSE_TRAIN=min(Lista_RMSE)
+cant_var_usar=Posicion_RMSE[posicion]
 
-# CREAMOS UN OBJETO RFE PARA SELECCIONAR LA CANT DE CARACTERISTICAS IDEALES
-rfe = RFE(model,n_features_to_select=var_usar)
+#######################TRANSFORMANDO LA DATA A LA CANTIDAD DE VARIABLES IDEALES
+#ESTA VEZ APLCIAREMOS OTRA VEZ RFE PERO PARA PODER TRANSFORMAR LA DATA DE X Y test, PARA QUE TENGAN SOLO LAS VARIABLES MÁS UTILES
+rfe = RFE(modelo,n_features_to_select=cant_var_usar)
 
-# AJUSTAMOS EL MODELO RFE AL CONJUNTO DE DATOS
+
 X_rfe = rfe.fit_transform(X, y)
 test=rfe.fit_transform(X, y)
+
 x_train, x_test, y_train, y_test = train_test_split(X_rfe, y,test_size=0.3,random_state=42)
 cabeceras_nuevas=X.columns[(rfe.get_support())]
-cabeceras_nuevas
+print(cabeceras_nuevas)
 
+#######################ITERANDO TODOS LOS MODELOS QUE SE ADAPTAN A NUESTRO PROBLEMA PARA HALLAR EL MEJOR
+# YA CON LA DATA TRANSFORMADA, PROCEDEREMOS A ITERAR LOS MODELOS QUE SE AJUSTEN A NUESTRO PROBLEMA PARA ENCONTRAR EL MEJOR
 
 from sklearn.svm import SVR
 from sklearn.linear_model import Ridge
@@ -62,10 +73,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import RANSACRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_val_predict
-import xgboost as xgb
+
 
 import numpy as np
-models = {
+modelos = {
     'SVR':SVR(),
     'Ridge':Ridge(),
     'ElasticNet':ElasticNet(),
@@ -74,52 +85,53 @@ models = {
     'LinearRegression':LinearRegression(),
     'RandomForestRegressor':RandomForestRegressor(),
     "RANSACRegressor":RANSACRegressor(),
-    #"XGBRegressor":xgb.XGBRegressor(objective ='reg:linear', colsample_bytree = 0.3, learning_rate = 0.1, max_depth = 5, alpha = 10, n_estimators = 150)
     
 }
 
-#TAKING RESULTS FROM THE MODELS
-model_results = []
-model_names = []
+#CREANDO LAS LISTAS
+modelo_resultado = []
+modelo_nombre = []
 
-# TRAINING THE MODEL WITH FUNCTION
-for name,model in models.items():
-    a = model.fit(x_train,y_train)
+# ENTRENANDO EL MODELO
+for nombre,modelo in modelos.items():
+    a = modelo.fit(x_train,y_train)
     predicted = a.predict(x_test)
     score = np.sqrt(mean_squared_error(y_test, predicted))
-    model_results.append(score)
-    model_names.append(name)
+    modelo_resultado.append(score)
+    modelo_nombre.append(nombre)
     
-    #CREATING DATAFRAME
-    df_results = pd.DataFrame([model_names,model_results])
-    df_results = df_results.transpose()
-    df_results = df_results.rename(columns={0:'Model',1:'RMSE'}).sort_values(by='RMSE',ascending=False)
+    #CREANDO LA LISTA DE RESULTADOS
+    df_resultados = pd.DataFrame([modelo_nombre,modelo_resultado])
+    df_resultados = df_resultados.transpose()
+    df_resultados = df_resultados.rename(columns={0:'Model',1:'RMSE'}).sort_values(by='RMSE',ascending=False)
     
-print(df_results)
+print(df_resultados)
 
-ganador=df_results["RMSE"].min()
-df_results=df_results.reset_index()
-df_results=df_results.drop("index", axis=1)
-df_results=df_results.set_index("RMSE")
-df_results.index.get_loc(ganador)
-df_results=df_results.iloc[7,0]
-print("Mejor modelo para el problema: "+ df_results)
+ganador=df_resultados["RMSE"].min()
+df_resultados=df_resultados.reset_index()
+df_resultados=df_resultados.drop("index", axis=1)
+df_resultados=df_resultados.set_index("RMSE")
+df_resultados.index.get_loc(ganador)
+df_resultados=df_resultados.iloc[7,0]
+print("Mejor modelo para el problema: "+ df_resultados)
+
+#######################REALIZAMOS LA VALIDACIÓN DEL MODELO
+#CREAREMOS EL MODELO GANADOR
+#CREAREMOS EL MODELO GANADOR
+modelo=modelos[df_resultados]
+
+#PROCEDEREMOS A REALIZAR LA VALIDACIÓN CRUZADA PARA COMPARAR LOS RMSE
+prediccion = cross_val_predict(modelo, X_rfe, y, cv=3)
+RMSE_TEST = np.sqrt(mean_squared_error(y, prediccion))
+
+#VEMOS QUE LA DIFERENCIA DE RMSE NO ES TAN GRANDE, LO QUE INDICA QUE NUESTRO MODELO ESTÁ BIEN
+APRUEBA=RMSE_TRAIN-RMSE_TEST
 
 
+#######################USAMOS EL MODELO GANADOR, LO ENTRENAMOS Y PROCEDEMOS A PREDECIR LOS VALORES DESEADOS
 
-model=models[df_results]
-
-predictions = cross_val_predict(model, X_rfe, y, cv=3)
-
-# CALCULATE RMSE
-rmse = np.sqrt(mean_squared_error(y, predictions))
-
-print("RMSE: ", rmse)
-
-
-model.fit(X_rfe, y)
-y_pred=model.predict(test)
-
+modelo.fit(X_rfe, y)
+y_pred=modelo.predict(test)
 
 test=pd.DataFrame(test)
 serie=pd.Series(y_pred)
