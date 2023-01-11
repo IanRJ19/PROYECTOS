@@ -113,7 +113,7 @@ df_resultados=df_resultados.drop("index", axis=1)
 df_resultados=df_resultados.set_index("RMSE")
 df_resultados.index.get_loc(ganador)
 df_resultados=df_resultados.iloc[7,0]
-print("Mejor modelo para el problema: "+ df_resultados)
+print("EL MEJOR MODELO PARA EL PROBLEMA ES: "+ df_resultados)
 
 #######################REALIZAMOS LA VALIDACIÓN DEL MODELO
 #CREAREMOS EL MODELO GANADOR
@@ -126,6 +126,10 @@ RMSE_TEST = np.sqrt(mean_squared_error(y, prediccion))
 
 #VEMOS QUE LA DIFERENCIA DE RMSE NO ES TAN GRANDE, LO QUE INDICA QUE NUESTRO MODELO ESTÁ BIEN
 APRUEBA=RMSE_TRAIN-RMSE_TEST
+
+print("El RMSE DEL TRAIN ES: "+str(RMSE_TRAIN))
+print("El RMSE DEL TEST ES: "+str(RMSE_TEST))
+print("LA DIFERENCIA DE AMBOS ES: "+str(APRUEBA))
 
 
 #######################USAMOS EL MODELO GANADOR, LO ENTRENAMOS Y PROCEDEMOS A PREDECIR LOS VALORES DESEADOS
