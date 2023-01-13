@@ -14,10 +14,3 @@ message['From'] = sender_email_address
 message['To'] = receiver_email_address 
 
 message.set_content("DATA", subtype='html')
-
-server = smtplib.SMTP(email_smtp, '587')  
-server.ehlo() 
-server.starttls() 
-server.login(sender_email_address, email_password) 
-server.send_message(message) 
-server.quit()
