@@ -27,6 +27,3 @@ with DAG(
         html_content="<h2>Esto es un correo de prueba"   
     )
 
-#mostrando cambio
-
-#mostrando cambio2
