@@ -29,3 +29,19 @@ dfFechaVisitas.applymap(str)
 
 #SUBIR AL SQL
 dfSubirE.to_sql('TH_Encuesta', con=engine, if_exists='append', index=False )
+
+
+#CONECTARME A ORACLE
+
+import cx_Oracle 
+connection = cx_Oracle.connect("username", "password", "host:port/sid")
+cursor = connection.cursor() 
+# Aquí puedes escribir tus consultas SQL y ejecutarlas usando cursor.execute()
+
+cursor.execute("SELECT * FROM table_name") 
+results = cursor.fetchall() 
+
+# Iterar sobre los resultados y mostrarlos en pantalla  
+for row in results:   print(row)  
+
+# Cerrar la conexión con la base de datos Oracle   connection.close()
