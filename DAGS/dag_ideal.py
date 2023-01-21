@@ -1,4 +1,3 @@
-
 from datetime import datetime,timedelta
 from airflow.models import DAG
 from textwrap import dedent
@@ -10,6 +9,7 @@ import pandas as pd
 from decouple import config
 from sqlalchemy import create_engine
 
+#Versión2
 #Definimos las funciones a utilizar
 def Conexion_DataBase(ti):
     from decouple import config
