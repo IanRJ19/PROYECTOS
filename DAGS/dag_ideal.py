@@ -6,11 +6,12 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.models import Variable
 from airflow.operators.email import EmailOperator
-
+import pandas as pd
+from decouple import config
+from sqlalchemy import create_engine
 
 #Definimos las funciones a utilizar
-def Conexion_DataBase():
-    global cadena
+def Conexion_DataBase(ti):
     from decouple import config
     
     # Es importante habilitar mi ip en las redes permitidas
@@ -21,13 +22,18 @@ def Conexion_DataBase():
     DB_PORT="5432"
     DB_HOST=config("URL_POSTGRES_GCP")
     cadena  = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    ti.xcom_push(key='cadena_database', value=cadena)
+
     print('La conexión está correcta')
     
 
-def Subir_Archivo():
+def Subir_Archivo(ti):
     from sqlalchemy import create_engine
     import pandas as pd
+    cadena=ti.xcom_pull(key='cadena_database', task_ids='Conexion_DataBase')
+
     engine= create_engine(cadena,echo=True)
+    print(cadena)
     print('La conexión está correcta')
     data={'name': ['John', 'Mike', 'Emily'],
             'age': [25, 30, 35],
