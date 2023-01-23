@@ -10,15 +10,16 @@ driver = webdriver.Chrome(chrome_options=options)
 # Crea una instancia de la clase webdriver.Chrome()
 
 driver.get("https://urbania.pe/")
-
+time.sleep(10)
 # Imprime el título de la página web
 print(driver.title)
 
 #REEMPLAZAR ESPACIOS POR PUNTOS
 #element = driver.find_element(By.CSS_SELECTOR,"CustomInput-sc-hd4j3y-7 fmLrhF")
 element =driver.find_element(By.CSS_SELECTOR,".CustomInput-sc-hd4j3y-7.fmLrhF")
-
+time.sleep(10)
 element.send_keys("San Miguel, Lima, Lima")
+time.sleep(10)
 #element.send_keys(Keys.RETURN)
 #element.send_keys(Keys.ENTER)
 
@@ -28,8 +29,9 @@ element.send_keys("San Miguel, Lima, Lima")
 
 #search_button = driver.find_element(By.CSS_SELECTOR,".sc-kMjNwy.gxFhbn.btn-primary.btn-full")
 #search_button.click()
-
+time.sleep(10)
 search_button = driver.find_element(By.CSS_SELECTOR,"button[data-qa='search-button']")
+time.sleep(10)
 search_button.click()
 #time.sleep(500)
 # Cierra el navegador

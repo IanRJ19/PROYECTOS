@@ -6,15 +6,15 @@ from selenium.webdriver.chrome.service import Service
 
 
 options = webdriver.ChromeOptions()
-options.add_argument("--user-data-dir=C:/Users/Rayzek/AppData/Local/Google/Chrome/User Data/Default")
+options.add_argument(f"user-data-dir=C:/Users/Rayzek/AppData/Local/Google/Chrome/User Data/Default")
+
+options.binary_location = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 
 
-
-
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(chrome_options=options)
 
 driver.get('https://urbania.pe/')
 
-time.sleep(50) # Let the user actually see something!
+time.sleep(50)
 
 #driver.quit()
