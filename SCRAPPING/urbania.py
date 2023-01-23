@@ -3,16 +3,12 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
-#options = webdriver.ChromeOptions()
-#options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
-#driver = webdriver.Chrome(chrome_options=options)
-path_to_chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe"
-
-driver = webdriver.Chrome(executable_path=path_to_chrome)
+options = webdriver.ChromeOptions()
+options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
+driver = webdriver.Chrome(chrome_options=options)
 
 # Crea una instancia de la clase webdriver.Chrome()
 
-#driver = webdriver.Chrome()
 driver.get("https://urbania.pe/")
 
 # Imprime el título de la página web
