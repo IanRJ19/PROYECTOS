@@ -1,0 +1,28 @@
+/* archivo: static/style.css */
+body {
+    font-family: sans-serif;
+  }
+  
+  input[type="text"] {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 200px;
+  }
+  
+  input[type="submit"] {
+    font-size: 16px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .message {
+    font-size: 16px;
+    margin-top: 16px;
+  }
+  
