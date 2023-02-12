@@ -11,7 +11,7 @@ numero_a_adivinar = randint(1, 100)
 async def raiz():
     return {"Bienvenido al juego de adivinanza de números!":
             "Adivina un número entre 1 y 100."}
-
+ 
 @app.get("/adivina/{numero}")
 async def adivina(numero: int):
     if numero == numero_a_adivinar:
