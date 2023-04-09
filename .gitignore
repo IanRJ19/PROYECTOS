@@ -36,3 +36,5 @@ Thumbs.db
 # CONTRASEÑAS
 .env
 .ico
+
+secreto/
